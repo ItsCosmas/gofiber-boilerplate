@@ -1,0 +1,25 @@
+# git and text editor
+.git/
+.gitignore
+.vscode/
+
+# jetbrains IDEs
+.idea/
+
+# ignore all *.md files in all folders
+**/*.md
+
+# Docker Related
+docker-compose.yml
+docker-compose.prod.yml
+Dockerfile.prod
+Dockerfile
+.dockerignore
+
+# misc
+.travis.yml
+# swagger docs
+docs
+
+# postgres persistence folder
+postgres_data

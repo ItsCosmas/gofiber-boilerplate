@@ -1,0 +1,47 @@
+version: '3'
+services:
+    app:
+        container_name: gofiber_app
+        build:
+            context: .
+            dockerfile: Dockerfile
+        command: sh -c "go mod download && air"
+        environment:
+            - PORT=8000
+        ports:
+            - '8000:8000'
+        working_dir: /opt/gofiber-app
+        volumes:
+            - .:/opt/gofiber-app/:cached
+            - /opt/gifiber-app/postgres_data/
+        depends_on:
+            - postgres
+
+    postgres:
+        image: postgres:12
+        container_name: gofiber_postgres
+        environment:
+            - POSTGRES_USER=${DB_USER}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB=${DB_NAME}
+            - DATABASE_HOST=${DB_HOST}
+        ports:
+            - '5432:5432'
+        volumes:
+            - ./postgres_data:/var/lib/postgresql/data
+        logging:
+            driver: none
+
+    pgadmin:
+        image: dpage/pgadmin4
+        container_name: gofiber_pgadmin
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+            PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+        depends_on:
+            - postgres
+        ports:
+            - '5050:80'
+        restart: unless-stopped
+        logging:
+            driver: none

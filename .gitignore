@@ -1,0 +1,25 @@
+# text editor
+.vscode/
+
+# jetbrains IDEs
+.idea/
+
+# swagger docs
+doc
+
+# static files
+static
+
+# postgres persistence folder
+postgres_data
+
+# Log
+*.log
+.debug
+tmp
+
+# Env
+*.env
+
+# misc
+.DS_Store
