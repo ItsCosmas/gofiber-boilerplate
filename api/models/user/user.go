@@ -13,6 +13,6 @@ type User struct {
 	ProfilePicture string `gorm:"size:255"`
 	Email          string `gorm:"NOT NULL;UNIQUE"`
 	Password       string `gorm:"NOT NULL"`
-	Role           string `gorm:"NOT NULL;size:255;DEFAULT:'editor'"`
+	Role           string `gorm:"NOT NULL;size:255;DEFAULT:'standard'"`
 	Active         bool   `gorm:"NOT NULL;DEFAULT:true"`
 }

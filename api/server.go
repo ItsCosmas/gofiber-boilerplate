@@ -11,7 +11,7 @@ import (
 	"github.com/ItsCosmas/gofiber-boilerplate/api/router"
 
 	// database
-	"github.com/ItsCosmas/gofiber-boilerplate/api/database"
+	db "github.com/ItsCosmas/gofiber-boilerplate/api/database"
 
 	// models
 	"github.com/ItsCosmas/gofiber-boilerplate/api/models/user"
@@ -37,13 +37,13 @@ func Run() {
 	*/
 
 	// Connect to Postgres
-	pgDb := database.ConnectPostgres()
+	db.ConnectPostgres()
 
 	// Drop on serve restarts in dev
-	// db.Migrator().DropTable(&user.User{})
+	// db.PgDB.Migrator().DropTable(&user.User{})
 
 	// Migration
-	pgDb.AutoMigrate(&user.User{})
+	db.PgDB.AutoMigrate(&user.User{})
 
 	/*
 		============ Set Up Middlewares ============
