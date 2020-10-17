@@ -10,7 +10,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// HomeController Handles Home
+// HomeController is a function to get to return a success message on the home endpoint
+// @Summary Return a welcome message
+// @Description Return a welcome message
+// @Router /v1/home [get]
 func HomeController(c *fiber.Ctx) error {
 	response := HTTPResponse(http.StatusOK, "Success", "Welcome Home")
 	return c.JSON(response)
