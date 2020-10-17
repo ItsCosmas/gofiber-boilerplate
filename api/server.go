@@ -7,8 +7,8 @@ import (
 
 	cfg "github.com/ItsCosmas/gofiber-boilerplate/api/configs"
 
-	// routers
-	"github.com/ItsCosmas/gofiber-boilerplate/api/router"
+	// routes
+	"github.com/ItsCosmas/gofiber-boilerplate/api/routes"
 
 	// database
 	db "github.com/ItsCosmas/gofiber-boilerplate/api/database"
@@ -58,7 +58,7 @@ func Run() {
 	/*
 		============ Set Up Routes ============
 	*/
-	router.SetupRoutes(app)
+	routes.SetupRoutes(app)
 
 	// Run the app and listen on given port
 	port := fmt.Sprintf(":%s", config.Port)
