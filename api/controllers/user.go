@@ -1,13 +1,14 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	passwordUtil "github.com/ItsCosmas/gofiber-boilerplate/api/common/passwordutil"
 	validator "github.com/ItsCosmas/gofiber-boilerplate/api/common/validator"
 	"github.com/ItsCosmas/gofiber-boilerplate/api/models/user"
 	userRepo "github.com/ItsCosmas/gofiber-boilerplate/api/repositories/user"
+	"github.com/ItsCosmas/gofiber-boilerplate/api/services/auth"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
@@ -16,7 +17,7 @@ import (
 type UserObject struct {
 	ExternalID     string `json:"-"`
 	FullName       string `json:"fullName" binding:"required"`
-	Email          string `json:"email" validate:"required,min=2,max=100,email"`
+	Email          string `json:"email" validate:"required,min=5,max=100,email"`
 	Password       string `json:"password" validate:"required,min=6"`
 	ProfilePicture string `json:"profilePicture"`
 	Bio            string `json:"bio"`
@@ -25,7 +26,7 @@ type UserObject struct {
 
 // UserLogin is the login format expected
 type UserLogin struct {
-	Email    string `json:"email" validate:"required,min=2,max=100,email"`
+	Email    string `json:"email" validate:"required,min=5,max=100,email"`
 	Password string `json:"password" validate:"required,min=6"`
 }
 
@@ -35,17 +36,16 @@ type UserOutput struct {
 	Email          string `json:"email"`
 	ProfilePicture string `json:"profilePicture"`
 	Bio            string `json:"bio"`
+	ID             string `json:"id"`
 }
 
-// Register is the registration handler
+// Register Godoc
 func Register(c *fiber.Ctx) error {
 	var userInput UserObject
 
 	if err := validator.ParseBodyAndValidate(c, &userInput); err != nil {
 		return err
 	}
-
-	// passwordIsCorrect := passwordUtil.CheckPasswordHash("password", hashedPass)
 
 	u := mapInputToUser(userInput)
 
@@ -55,20 +55,61 @@ func Register(c *fiber.Ctx) error {
 
 	// Save User To DB
 	if err := userRepo.Create(&u); err != nil {
-		fmt.Println(err)
-		response := HTTPResponse(http.StatusOK, "An Error Occurred", "Registration Not Completed")
-		return c.JSON(response)
+		response := HTTPResponse(http.StatusInternalServerError, "User Not Registered", err.Error())
+		return c.Status(http.StatusInternalServerError).JSON(response)
 	}
-	response := HTTPResponse(http.StatusOK, "Success", "Registration Success")
-	return c.JSON(response)
+
+	userOutput := mapToUserOutPut(&u)
+	response := HTTPResponse(http.StatusCreated, "User Registered", userOutput)
+	return c.Status(http.StatusCreated).JSON(response)
 
 }
 
-// Error Occurs while trying to save user to db
-// func saveUser(user *user.User) error {
-// 	fmt.Println("Saving Here...")
-// 	return db.Create(user).Error
-// }
+// Login Godoc
+// @Summary Login
+// @Description Logs in a user
+// @Tags Auth
+// @Produce json
+// @Param payload body UserLogin true "Login Body"
+// @Success 200 {object} Response
+// @Failure 400 {object} Response
+// @Router /v1/auth/login [post]
+func Login(c *fiber.Ctx) error {
+	var userInput UserLogin
+
+	// Validate Input
+	if err := validator.ParseBodyAndValidate(c, &userInput); err != nil {
+		return err
+	}
+
+	// Check If User Exists
+	user, err := userRepo.GetByEmail(userInput.Email)
+	if err != nil {
+		return c.Status(http.StatusNotFound).JSON(HTTPResponse(http.StatusNotFound, "User Does Not Exist Found", err.Error()))
+	}
+
+	// Check if Password is Correct (Hash and Compare DB Hash)
+	passwordIsCorrect := passwordUtil.CheckPasswordHash(userInput.Password, user.Password)
+	if !passwordIsCorrect {
+		return c.Status(http.StatusUnauthorized).JSON(HTTPResponse(http.StatusUnauthorized, "Email or Password is Incorrect", nil))
+	}
+
+	// Issue Token
+	token, err := auth.IssueToken(*user)
+	if err != nil {
+		// return err
+		return c.Status(http.StatusInternalServerError).JSON(HTTPResponse(http.StatusInternalServerError, "Something Went Wrong", nil))
+
+	}
+
+	// Return User and Token
+	return c.Status(http.StatusOK).JSON(HTTPResponse(http.StatusOK, "Login Success", fiber.Map{"user": mapToUserOutPut(user), "token": token}))
+
+}
+
+// ============================================================
+// =================== Private Methods ========================
+// ============================================================
 
 func mapInputToUser(userInput UserObject) user.User {
 	return user.User{
@@ -76,5 +117,15 @@ func mapInputToUser(userInput UserObject) user.User {
 		Email:      userInput.Email,
 		Password:   userInput.Password, // Hash Password Here
 		ExternalID: uuid.New().String(),
+	}
+}
+
+func mapToUserOutPut(u *user.User) *UserOutput {
+	return &UserOutput{
+		ID:             u.ExternalID,
+		FullName:       u.FullName,
+		Email:          u.Email,
+		ProfilePicture: u.ProfilePicture,
+		Bio:            u.Bio,
 	}
 }
