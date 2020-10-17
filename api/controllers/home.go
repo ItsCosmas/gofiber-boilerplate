@@ -10,7 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// HomeController is a function to get to return a success message on the home endpoint
+// HomeController godoc
 // @Summary Return a welcome message
 // @Description Return a welcome message
 // @Tags Home
