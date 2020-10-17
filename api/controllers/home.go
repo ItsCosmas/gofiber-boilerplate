@@ -13,6 +13,9 @@ import (
 // HomeController is a function to get to return a success message on the home endpoint
 // @Summary Return a welcome message
 // @Description Return a welcome message
+// @Tags Home
+// @Success 200 {object} Response
+// @Failure 400 {object} Response
 // @Router /v1/home [get]
 func HomeController(c *fiber.Ctx) error {
 	response := HTTPResponse(http.StatusOK, "Success", "Welcome Home")
