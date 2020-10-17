@@ -33,7 +33,7 @@ import (
 // @contact.url https://github.com/ItsCosmas
 // @contact.email devcosmas@gmail.com
 // @license.name MIT
-// @license.url https://github.com/ItsCosmas/gofiber-boilerplate/LICENSE.md
+// @license.url https://github.com/ItsCosmas/gofiber-boilerplate/LICENSE
 // @BasePath /api
 func Run() {
 	app := fiber.New()
