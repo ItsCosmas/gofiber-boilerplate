@@ -38,7 +38,7 @@ func IssueToken(u user.User) (string, error) {
 		u.Role,
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
-			Issuer:    "Your Company",
+			Issuer:    cfg.GetConfig().JWTIssuer,
 		},
 	}
 

@@ -20,6 +20,7 @@ type Config struct {
 	Postgres PostgresConfig `json:"postgres"`
 	// Mailgun   MailgunConfig  `json:"mailgun"`
 	JWTSecret string `env:"JWT_SIGN_KEY"`
+	JWTIssuer string `env:"JWT_ISSUER"`
 	Host      string `env:"APP_HOST"`
 	Port      string `env:"APP_PORT"`
 	// FromEmail string         `env:"EMAIL_FROM"`
@@ -53,6 +54,7 @@ func GetConfig() Config {
 		Postgres: GetPostgresConfig(),
 		// Mailgun:   GetMailgunConfig(),
 		JWTSecret: os.Getenv("JWT_SIGN_KEY"),
+		JWTIssuer: os.Getenv("JWT_ISSUER"),
 		Host:      os.Getenv("APP_HOST"),
 		Port:      os.Getenv("APP_PORT"),
 		// FromEmail: os.Getenv("EMAIL_FROM"),
