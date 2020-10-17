@@ -1,3 +1,3 @@
 Generate Swagger Docs
 
--   `swag init --output ./api/docs`
+-   `swag init -g api/app.go --output ./api/docs`
