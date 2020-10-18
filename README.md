@@ -19,9 +19,12 @@
 -   [x] JWT Authentication
 -   [x] REST API
 -   [x] Gorm (Golang SQL DB ORM) with Postgres implementation and auto migration
+-   [x] MongoDB using the official mongo driver
 -   [x] Configs via environmental variables
 -   [x] Email notification (Welcome email, Reset password email)
 -   [x] Swagger REST API documentation
+-   [x] gRPC
+-   [x] WebSocket
 
 ---
 
@@ -57,10 +60,9 @@ swag init -g api/app.go --output ./api/docs # Generates Swagger
 
 maybe?
 
--   [ ] gRPC
+-   [ ] SMS notification (2FA ,Reset password code)
 -   [ ] Redis
--   [ ] WebSocket
--   [ ] MongoDB
+-   [ ] Sentry
 
 ---
 
