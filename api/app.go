@@ -58,6 +58,9 @@ func Run() {
 	// Migration
 	db.PgDB.AutoMigrate(&user.User{})
 
+	// Connect to Mongo
+	db.ConnectMongo()
+
 	/*
 		============ Set Up Middlewares ============
 	*/
