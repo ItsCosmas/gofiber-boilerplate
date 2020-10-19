@@ -115,7 +115,7 @@ func mapInputToUser(userInput UserObject) user.User {
 	return user.User{
 		FullName:   userInput.FullName,
 		Email:      userInput.Email,
-		Password:   userInput.Password, // Hash Password Here
+		Password:   userInput.Password,
 		ExternalID: uuid.New().String(),
 	}
 }
