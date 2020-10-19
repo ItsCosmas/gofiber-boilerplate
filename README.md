@@ -55,6 +55,7 @@ swag init -g api/app.go --output ./api/docs # Generates Swagger
 
 -   [ ] Better Input Validations
 -   [ ] Custom Error messages
+-   [ ] Data Migrations
 -   [ ] Logger
 -   [ ] Unit tests
 
@@ -62,6 +63,7 @@ maybe?
 
 -   [ ] SMS notification (2FA ,Reset password code)
 -   [ ] Redis
+-   [ ] GraphQL
 -   [ ] Sentry
 
 ---
