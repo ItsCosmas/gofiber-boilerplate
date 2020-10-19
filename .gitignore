@@ -13,6 +13,8 @@ static
 # postgres persistence folder
 postgres_data
 
+# mongo persistence folder
+mongodata
 # Log
 *.log
 .debug
