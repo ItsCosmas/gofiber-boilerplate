@@ -15,9 +15,8 @@ const (
 // Config object
 type Config struct {
 	Env      string         `env:"ENV"`
-	Pepper   string         `env:"PEPPER"`
-	HMACKey  string         `env:"HMAC_KEY"`
 	Postgres PostgresConfig `json:"postgres"`
+	Mongo    MongoDBConfig  `json:"mongo"`
 	// Mailgun   MailgunConfig  `json:"mailgun"`
 	JWTSecret string `env:"JWT_SIGN_KEY"`
 	JWTIssuer string `env:"JWT_ISSUER"`
@@ -49,9 +48,8 @@ func LoadConfig() {
 func GetConfig() Config {
 	return Config{
 		Env:      os.Getenv("ENV"),
-		Pepper:   os.Getenv("PEPPER"),
-		HMACKey:  os.Getenv("HMAC_KEY"),
 		Postgres: GetPostgresConfig(),
+		Mongo:    GetMongoDBConfig(),
 		// Mailgun:   GetMailgunConfig(),
 		JWTSecret: os.Getenv("JWT_SIGN_KEY"),
 		JWTIssuer: os.Getenv("JWT_ISSUER"),
