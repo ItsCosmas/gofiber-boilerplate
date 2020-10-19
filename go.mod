@@ -13,6 +13,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/klauspost/compress v1.11.1 // indirect
 	github.com/swaggo/swag v1.6.8
+	go.mongodb.org/mongo-driver v1.4.2
 	golang.org/x/crypto v0.0.0-20201016220609-9e8e0b390897
 	gopkg.in/dgrijalva/jwt-go.v3 v3.2.0
 	gorm.io/driver/postgres v1.0.2
