@@ -16,6 +16,7 @@ services:
             - /opt/gifiber-app/postgres_data/
         depends_on:
             - postgres
+            - mongo
 
     postgres:
         image: postgres:12
@@ -43,5 +44,28 @@ services:
         ports:
             - '5050:80'
         restart: unless-stopped
+        logging:
+            driver: none
+
+    # MongoDB
+    mongo:
+        image: 'mongo:4.2-bionic'
+        container_name: mongo
+        ports:
+            - '27017:27017'
+        volumes:
+            - ./mongodata:/data/db
+        restart: always
+        logging:
+            driver: none
+    # Mongo Express Web-based MongoDB admin interface
+    mongo_express:
+        image: mongo-express
+        container_name: mongo_express
+        depends_on:
+            - 'mongo'
+        ports:
+            - '8081:8081'
+        restart: always
         logging:
             driver: none
