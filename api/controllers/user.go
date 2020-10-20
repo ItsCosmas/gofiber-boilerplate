@@ -73,7 +73,7 @@ func Register(c *fiber.Ctx) error {
 // @Param payload body UserLogin true "Login Body"
 // @Success 200 {object} Response
 // @Failure 400 {object} Response
-// @Router /v1/auth/login [post]
+// @Router /auth/login [post]
 func Login(c *fiber.Ctx) error {
 	var userInput UserLogin
 

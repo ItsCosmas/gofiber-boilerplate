@@ -8,40 +8,47 @@ import (
 	"github.com/ItsCosmas/gofiber-boilerplate/api/models/book"
 	bookRepo "github.com/ItsCosmas/gofiber-boilerplate/api/repositories/book"
 
-	"go.mongodb.org/mongo-driver/bson/primitive"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 )
 
 // BookObject is the Structure Of The Book
 type BookObject struct {
-	ExternalID    string      `json:"-"`
-	Title         string      `json:"title" validate:"required"`
-	Authors       primitive.A `json:"authors" validate:"required"`
-	Description   string      `json:"description" validate:"required"`
-	Category      string      `json:"category" validate:"required"`
-	Publisher     string      `json:"publisher" validate:"required"`
-	PublishedDate string      `json:"published_date" validate:"required"`
-	ISBN          string      `json:"isbn" validate:"required"`
-	Thumbnail     string      `json:"thumbnail" validate:"required"`
-	Deleted       bool        `json:"deleted"`
+	ExternalID    string   `json:"-"`
+	Title         string   `json:"title" validate:"required"`
+	Authors       []string `json:"authors" validate:"required"`
+	Description   string   `json:"description" validate:"required"`
+	Category      string   `json:"category" validate:"required"`
+	Publisher     string   `json:"publisher" validate:"required"`
+	PublishedDate string   `json:"published_date" validate:"required"`
+	ISBN          string   `json:"isbn" validate:"required"`
+	Thumbnail     string   `json:"thumbnail" validate:"required"`
+	Deleted       bool     `json:"deleted"`
 }
 
 // BookOutput is the output format of the book
 type BookOutput struct {
-	ExternalID    string      `json:"-"`
-	Title         string      `json:"title"`
-	Authors       primitive.A `json:"authors"`
-	Description   string      `json:"description"`
-	Category      string      `json:"category"`
-	Publisher     string      `json:"publisher"`
-	PublishedDate string      `json:"published_date"`
-	ISBN          string      `json:"isbn"`
-	Thumbnail     string      `json:"thumbnail"`
+	ExternalID    string   `json:"-"`
+	Title         string   `json:"title"`
+	Authors       []string `json:"authors"`
+	Description   string   `json:"description"`
+	Category      string   `json:"category"`
+	Publisher     string   `json:"publisher"`
+	PublishedDate string   `json:"published_date"`
+	ISBN          string   `json:"isbn"`
+	Thumbnail     string   `json:"thumbnail"`
 }
 
 // CreateBook Godoc
+// @Summary Create Book
+// @Description Creates a new book
+// @Tags Books
+// @Produce json
+// @Param payload body BookObject true "Book Body"
+// @Success 201 {object} Response
+// @Failure 400 {object} Response
+// @Failure 500 {object} Response
+// @Router /books [post]
 func CreateBook(c *fiber.Ctx) error {
 	var bookInput BookObject
 
