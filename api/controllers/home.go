@@ -20,16 +20,3 @@ func HomeController(c *fiber.Ctx) error {
 	response := HTTPResponse(http.StatusOK, "Success", "Welcome Home")
 	return c.JSON(response)
 }
-
-// Private Methods
-func login(u user.User) error {
-
-	token, err := auth.IssueToken(u)
-	if err != nil {
-		return err
-	}
-	print("==============")
-	print(token)
-	print("==============")
-	return nil
-}
