@@ -28,7 +28,7 @@ type BookObject struct {
 
 // BookOutput is the output format of the book
 type BookOutput struct {
-	ExternalID    string   `json:"-"`
+	ExternalID    string   `json:"id"`
 	Title         string   `json:"title"`
 	Authors       []string `json:"authors"`
 	Description   string   `json:"description"`
@@ -57,9 +57,21 @@ func CreateBook(c *fiber.Ctx) error {
 		return err
 	}
 
-	b := mapInputToBook(bookInput)
+	// FIXME Edge case where a book doesn't exist or collection doesn't Exist
 
-	// TODO Ensure a book with a similar ISBN doesn't exist
+	// book, err := bookRepo.GetByISBN(bookInput.ISBN)
+
+	// if err != nil {
+	// 	response := HTTPResponse(http.StatusInternalServerError, "Book Not Created", err.Error())
+	// 	return c.Status(http.StatusInternalServerError).JSON(response)
+	// }
+
+	// if book != nil {
+	// 	response := HTTPResponse(http.StatusBadRequest, "Book Not Created", "A book with given ISBN Already Exists")
+	// 	return c.Status(http.StatusBadRequest).JSON(response)
+	// }
+
+	b := mapInputToBook(bookInput)
 
 	// Save Book To DB
 	if _, err := bookRepo.Create(&b); err != nil {
@@ -74,21 +86,48 @@ func CreateBook(c *fiber.Ctx) error {
 }
 
 // GetAllBooks Godoc
+// @Summary Get All Books
+// @Description Returns all books
+// @Tags Books
+// @Produce json
+// @Success 200 {object} Response
+// @Failure 500 {object} Response
+// @Router /books [get]
 func GetAllBooks(c *fiber.Ctx) error {
-	return c.Status(http.StatusOK).JSON(fiber.Map{
-		"code":    http.StatusOK,
-		"message": "All Books",
-		"body":    "Response Body in JSON",
-	})
+	books, err := bookRepo.GetAll()
+	if err != nil {
+		response := HTTPResponse(http.StatusInternalServerError, "Error Getting All Books", err.Error())
+		return c.Status(http.StatusInternalServerError).JSON(response)
+	}
+
+	booksOutput := mapToBooksOutput(books)
+
+	response := HTTPResponse(http.StatusOK, "All Books", booksOutput)
+	return c.Status(http.StatusOK).JSON(response)
+
 }
 
 // GetBookByID Godoc
+// @Summary Get Book By a Given ID
+// @Description Returns a single book with specified id
+// @Tags Books
+// @Produce json
+// @Param id path string true "ID"
+// @Success 200 {object} Response
+// @Success 404 {object} Response
+// @Failure 500 {object} Response
+// @Router /books/{id} [get]
 func GetBookByID(c *fiber.Ctx) error {
-	return c.Status(http.StatusOK).JSON(fiber.Map{
-		"code":    http.StatusOK,
-		"message": "Requested Book",
-		"body":    "Response Body in JSON",
-	})
+	id := c.Params("id")
+	book, err := bookRepo.GetByID(id)
+
+	if err != nil {
+		response := HTTPResponse(http.StatusNotFound, "Cannot Get Book with Specified ID", err.Error())
+		return c.Status(http.StatusNotFound).JSON(response)
+	}
+
+	response := HTTPResponse(http.StatusOK, "Book with Specified ID", mapToBookOutPut(book))
+	return c.Status(http.StatusOK).JSON(response)
 }
 
 // Update A Book
@@ -126,4 +165,12 @@ func mapToBookOutPut(b *book.Book) *BookOutput {
 		ISBN:          b.ISBN,
 		Thumbnail:     b.Thumbnail,
 	}
+}
+
+func mapToBooksOutput(b []*book.Book) []*BookOutput {
+	var bookSlice []*BookOutput
+	for i := 0; i < len(b); i++ {
+		bookSlice = append(bookSlice, mapToBookOutPut(b[i]))
+	}
+	return bookSlice
 }
