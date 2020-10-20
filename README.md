@@ -5,10 +5,13 @@
 
 **Used libraries:**
 
--   [gofiber](https://gofiber.io/)
--   [gorm](https://gorm.io/)
+-   [Gofiber](https://gofiber.io/)
+-   [Gorm](https://gorm.io/)
 -   [jwt-go](https://pkg.go.dev/gopkg.in/dgrijalva/jwt-go.v3?tab=doc)
 -   [godotenv](https://pkg.go.dev/github.com/joho/godotenv?tab=doc)
+-   [uuid](github.com/google/uuid)
+-   [Go Mongo Driver](go.mongodb.org/mongo-driver)
+-   [Go Playground Validator](github.com/go-playground/validator/v10)
 
 ---
 
@@ -18,13 +21,15 @@
 -   [x] User Auth functionality (Signup, Login, Forgot Password, Reset Password)
 -   [x] JWT Authentication
 -   [x] REST API
+-   [x] Swagger REST API documentation
 -   [x] Gorm (Golang SQL DB ORM) with Postgres implementation and auto migration
 -   [x] MongoDB using the official mongo driver
+-   [ ] Redis
 -   [x] Configs via environmental variables
--   [x] Email notification (Welcome email, Reset password email)
--   [x] Swagger REST API documentation
--   [x] gRPC
--   [x] WebSocket
+-   [ ] Email notification (Welcome email, Reset password email)
+-   [ ] gRPC
+-   [ ] Casbin
+-   [ ] WebSocket
 
 ---
 
@@ -62,7 +67,6 @@ swag init -g api/app.go --output ./api/docs # Generates Swagger
 maybe?
 
 -   [ ] SMS notification (2FA ,Reset password code)
--   [ ] Redis
 -   [ ] GraphQL
 -   [ ] Sentry
 
