@@ -2,12 +2,12 @@ package database
 
 import (
 
-	// Configs
 	"context"
 	"fmt"
 	"log"
 	"time"
 
+	// Configs
 	cfg "github.com/ItsCosmas/gofiber-boilerplate/api/configs"
 
 	// Gorm
@@ -15,7 +15,6 @@ import (
 	"gorm.io/gorm"
 
 	// Mongo
-
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
