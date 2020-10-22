@@ -3,10 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/ItsCosmas/gofiber-boilerplate/api/models/user"
-
-	"github.com/ItsCosmas/gofiber-boilerplate/api/services/auth"
-
 	"github.com/gofiber/fiber/v2"
 )
 
