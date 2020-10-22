@@ -52,7 +52,8 @@ docker-compose down      # docker-compose down (Shutdown App)
 swag init -g api/app.go --output ./api/docs # Generates Swagger
 ```
 
--   See Swagger Doc `http://localhost:8000/docs`
+-   API `http://localhost:8000/api/v1`
+-   Swagger Doc `http://localhost:8000/docs`
 
 ---
 
