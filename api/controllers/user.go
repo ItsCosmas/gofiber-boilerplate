@@ -40,6 +40,14 @@ type UserOutput struct {
 }
 
 // Register Godoc
+// @Summary Register
+// @Description Registers a user
+// @Tags Auth
+// @Produce json
+// @Param payload body UserObject true "Register Body"
+// @Success 201 {object} Response
+// @Failure 400 {object} Response
+// @Router /auth/register [post]
 func Register(c *fiber.Ctx) error {
 	var userInput UserObject
 
