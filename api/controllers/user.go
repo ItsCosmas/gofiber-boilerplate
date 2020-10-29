@@ -93,7 +93,7 @@ func Login(c *fiber.Ctx) error {
 	// Check If User Exists
 	user, err := userRepo.GetByEmail(userInput.Email)
 	if err != nil {
-		return c.Status(http.StatusNotFound).JSON(HTTPResponse(http.StatusNotFound, "User Does Not Exist Found", err.Error()))
+		return c.Status(http.StatusNotFound).JSON(HTTPResponse(http.StatusNotFound, "User Does Not Exist", nil))
 	}
 
 	// Check if Password is Correct (Hash and Compare DB Hash)
@@ -106,7 +106,7 @@ func Login(c *fiber.Ctx) error {
 	token, err := auth.IssueToken(*user)
 	if err != nil {
 		// return err
-		return c.Status(http.StatusInternalServerError).JSON(HTTPResponse(http.StatusInternalServerError, "Something Went Wrong", nil))
+		return c.Status(http.StatusInternalServerError).JSON(HTTPResponse(http.StatusInternalServerError, "Something Went Wrong: Could Not Issue Token", nil))
 
 	}
 
