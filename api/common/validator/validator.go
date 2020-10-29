@@ -33,6 +33,7 @@ func Validate(payload interface{}) *fiber.Error {
 
 		fmt.Println("---------------")
 
+		// TODO Here We will Now Fine Tune Errors
 		return &fiber.Error{
 			Code:    fiber.StatusBadRequest,
 			Message: strings.Join(errors, ","),
@@ -60,10 +61,13 @@ func ParseBody(c *fiber.Ctx, body interface{}) *fiber.Error {
 // Is any error occurs it will panic.
 // Its just a helper function to avoid writing if condition again n again.
 func ParseBodyAndValidate(c *fiber.Ctx, body interface{}) *fiber.Error {
+
+	// First We Parse
 	if err := ParseBody(c, body); err != nil {
 		return err
 	}
 
+	// Then We Validate
 	return Validate(body)
 }
 
