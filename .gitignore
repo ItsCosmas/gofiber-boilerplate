@@ -5,7 +5,7 @@
 .idea/
 
 # swagger docs
-api/docs/
+src/api/docs/
 
 # static files
 static
