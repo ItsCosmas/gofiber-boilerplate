@@ -78,3 +78,7 @@ maybe?
 Open to Suggestions and Pull Requests
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
+### Gotcha's
+
+- Building Swago from source code - `go build -o swag.exe cmd/swag/main.go`
