@@ -35,10 +35,10 @@
 
 ### Run locally
 
-Create `.env` at root, i.e.
+Create `.env` at src, i.e.
 
 ```sh
-cp .env.example .env
+cp src/.env.example src/.env
 ```
 
 Run
