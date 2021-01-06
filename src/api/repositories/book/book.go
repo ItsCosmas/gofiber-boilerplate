@@ -6,11 +6,12 @@ import (
 	"log"
 	"time"
 
-	"github.com/ItsCosmas/gofiber-boilerplate/api/models/book"
+	"gofiber-boilerplate/api/models/book"
+
 	"go.mongodb.org/mongo-driver/bson"
 
 	// database
-	db "github.com/ItsCosmas/gofiber-boilerplate/api/database"
+	db "gofiber-boilerplate/api/database"
 )
 
 // Create Book

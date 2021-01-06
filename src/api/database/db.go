@@ -1,14 +1,13 @@
 package database
 
 import (
-
 	"context"
 	"fmt"
 	"log"
 	"time"
 
 	// Configs
-	cfg "github.com/ItsCosmas/gofiber-boilerplate/api/configs"
+	cfg "gofiber-boilerplate/api/configs"
 
 	// Gorm
 	"gorm.io/driver/postgres"

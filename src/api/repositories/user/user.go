@@ -2,9 +2,9 @@ package user
 
 import (
 	// user model
-	"github.com/ItsCosmas/gofiber-boilerplate/api/models/user"
+	"gofiber-boilerplate/api/models/user"
 	// database
-	db "github.com/ItsCosmas/gofiber-boilerplate/api/database"
+	db "gofiber-boilerplate/api/database"
 	// "gorm.io/gorm"
 )
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	app "github.com/ItsCosmas/gofiber-boilerplate/api"
+	app "gofiber-boilerplate/api"
 )
 
 func main() {

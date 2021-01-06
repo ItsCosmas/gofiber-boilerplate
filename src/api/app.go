@@ -4,19 +4,19 @@ import (
 	"fmt"
 
 	// Configs
-	cfg "github.com/ItsCosmas/gofiber-boilerplate/api/configs"
+	cfg "gofiber-boilerplate/api/configs"
 
 	// Swagger
-	docs "github.com/ItsCosmas/gofiber-boilerplate/api/docs" // Swagger Docs
+	docs "gofiber-boilerplate/api/docs" // Swagger Docs
 
 	// routes
-	"github.com/ItsCosmas/gofiber-boilerplate/api/routes"
+	"gofiber-boilerplate/api/routes"
 
 	// database
-	db "github.com/ItsCosmas/gofiber-boilerplate/api/database"
+	db "gofiber-boilerplate/api/database"
 
 	// models
-	"github.com/ItsCosmas/gofiber-boilerplate/api/models/user"
+	"gofiber-boilerplate/api/models/user"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"

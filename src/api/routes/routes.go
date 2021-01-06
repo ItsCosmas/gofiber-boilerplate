@@ -2,7 +2,8 @@ package routes
 
 import (
 	// Controllers
-	ctl "github.com/ItsCosmas/gofiber-boilerplate/api/controllers"
+	ctl "gofiber-boilerplate/api/controllers"
+
 	swagger "github.com/arsmn/fiber-swagger/v2"
 	"github.com/gofiber/fiber/v2"
 )

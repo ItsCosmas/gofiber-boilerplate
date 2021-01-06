@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"time"
 
-	validator "github.com/ItsCosmas/gofiber-boilerplate/api/common/validator"
-	"github.com/ItsCosmas/gofiber-boilerplate/api/models/book"
-	bookRepo "github.com/ItsCosmas/gofiber-boilerplate/api/repositories/book"
+	validator "gofiber-boilerplate/api/common/validator"
+	"gofiber-boilerplate/api/models/book"
+	bookRepo "gofiber-boilerplate/api/repositories/book"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"

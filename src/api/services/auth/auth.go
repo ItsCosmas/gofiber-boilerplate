@@ -3,9 +3,9 @@ package auth
 import (
 	"time"
 
-	"github.com/ItsCosmas/gofiber-boilerplate/api/models/user"
+	"gofiber-boilerplate/api/models/user"
 
-	cfg "github.com/ItsCosmas/gofiber-boilerplate/api/configs"
+	cfg "gofiber-boilerplate/api/configs"
 
 	jwt "gopkg.in/dgrijalva/jwt-go.v3"
 )

@@ -1,4 +1,4 @@
-module github.com/ItsCosmas/gofiber-boilerplate
+module gofiber-boilerplate
 
 go 1.15
 

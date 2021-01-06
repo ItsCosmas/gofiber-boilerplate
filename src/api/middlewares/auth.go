@@ -1,8 +1,8 @@
 package middlewares
 
 import (
-	cfg "github.com/ItsCosmas/gofiber-boilerplate/api/configs"
-	ctl "github.com/ItsCosmas/gofiber-boilerplate/api/controllers"
+	cfg "gofiber-boilerplate/api/configs"
+	ctl "gofiber-boilerplate/api/controllers"
 
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v2"
