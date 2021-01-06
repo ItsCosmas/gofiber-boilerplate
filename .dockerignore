@@ -21,6 +21,6 @@ Dockerfile
 # swagger docs
 docs
 
-# postgres persistence folder
+# postgres and mongo persistence folder
 postgres_data
 mongodata
