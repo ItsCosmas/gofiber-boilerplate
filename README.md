@@ -35,21 +35,29 @@
 
 ### Run locally
 
-Create `.env` at src, i.e.
+1. Create `.env` at src, i.e.
 
 ```sh
 cp src/.env.example src/.env
 ```
 
-Run
+2. Download Swag for generating docs
+
+```sh
+go get -u github.com/swaggo/swag/cmd/swag
+```
+
+3. Run
+
+- NOTE: You have to generate swagger docs before running the app.
 
 ```sh
 # Terminal 1
-docker-compose --env-file ./src/.env up        # docker-compose up (Run App With AutoReload)
-docker-compose down      # docker-compose down (Shutdown App)
+swag init -g src/api/app.go --output ./src/api/docs # Generates Swagger
 
 # Terminal 2
-swag init -g src/api/app.go --output ./src/api/docs # Generates Swagger
+docker-compose --env-file ./src/.env up        # docker-compose up (Run App With AutoReload)
+docker-compose --env-file ./src/.env down      # docker-compose down (Shutdown App)
 ```
 
 - API `http://localhost:8000/api/v1`
@@ -73,12 +81,12 @@ maybe?
 
 ---
 
+### Gotcha's
+
+- Building Swago from source code - `go build -o swag.exe cmd/swag/main.go`
+
 ### Contribution
 
 Open to Suggestions and Pull Requests
 
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-
-### Gotcha's
-
-- Building Swago from source code - `go build -o swag.exe cmd/swag/main.go`
