@@ -1,17 +1,16 @@
 package book
 
 import (
-	// user model
 	"context"
 	"log"
 	"time"
-
-	"gofiber-boilerplate/api/models/book"
 
 	"go.mongodb.org/mongo-driver/bson"
 
 	// database
 	db "gofiber-boilerplate/api/database"
+	// book model
+	"gofiber-boilerplate/api/models/book"
 )
 
 // Create Book
@@ -62,7 +61,7 @@ func GetByID(id string) (*book.Book, error) {
 	var book book.Book
 	filter := bson.M{"external_id": id}
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel() // releases resources if CreateBook completes before timeout elapses
+	defer cancel()
 	collection := db.MgDB.Db.Collection("books")
 
 	err := collection.FindOne(ctx, filter).Decode(&book)
@@ -78,7 +77,7 @@ func GetByISBN(isbn string) (*book.Book, error) {
 	var book book.Book
 	filter := bson.M{"isbn": isbn}
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel() // releases resources if CreateBook completes before timeout elapses
+	defer cancel()
 	collection := db.MgDB.Db.Collection("books")
 
 	err := collection.FindOne(ctx, filter).Decode(&book)
