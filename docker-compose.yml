@@ -1,4 +1,4 @@
-version: '3'
+version: '3.5'
 services:
   app:
     container_name: gofiber_app
@@ -16,6 +16,8 @@ services:
     depends_on:
       - postgres
       - mongo
+    networks:
+      - 'gofiber-net'
 
   postgres:
     image: postgres:12
@@ -31,6 +33,8 @@ services:
       - ./postgres_data:/var/lib/postgresql/data
     logging:
       driver: none
+    networks:
+      - 'gofiber-net'
 
   pgadmin:
     image: dpage/pgadmin4
@@ -45,11 +49,13 @@ services:
     restart: unless-stopped
     logging:
       driver: none
+    networks:
+      - 'gofiber-net'
 
   # MongoDB
   mongo:
     image: 'mongo:4.2-bionic'
-    container_name: mongo
+    container_name: gofiber_mongo
     ports:
       - '27017:27017'
     volumes:
@@ -57,10 +63,12 @@ services:
     restart: always
     logging:
       driver: none
+    networks:
+      - 'gofiber-net'
   # Mongo Express Web-based MongoDB admin interface
   mongo_express:
     image: mongo-express
-    container_name: mongo_express
+    container_name: gofiber_mongo_express
     depends_on:
       - 'mongo'
     ports:
@@ -68,3 +76,9 @@ services:
     restart: always
     logging:
       driver: none
+    networks:
+      - 'gofiber-net'
+
+networks:
+  gofiber-net:
+    name: gofiber-net
