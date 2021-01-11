@@ -16,7 +16,7 @@ import (
 // UserObject is the structure of the user
 type UserObject struct {
 	ExternalID     string `json:"-"`
-	FullName       string `json:"fullName" binding:"required"`
+	FullName       string `json:"fullName" validate:"required,min=2,max=30"`
 	Email          string `json:"email" validate:"required,min=5,max=100,email"`
 	Password       string `json:"password" validate:"required,min=6"`
 	ProfilePicture string `json:"profilePicture"`
@@ -46,13 +46,14 @@ type UserOutput struct {
 // @Produce json
 // @Param payload body UserObject true "Register Body"
 // @Success 201 {object} Response
-// @Failure 400 {object} Response
+// @Failure 400 {object} ErrorResponse
 // @Router /auth/register [post]
 func Register(c *fiber.Ctx) error {
 	var userInput UserObject
 
+	// Validate Input
 	if err := validator.ParseBodyAndValidate(c, &userInput); err != nil {
-		return err
+		return c.Status(http.StatusBadRequest).JSON(HTTPErrorResponse(err))
 	}
 
 	u := mapInputToUser(userInput)
@@ -80,14 +81,15 @@ func Register(c *fiber.Ctx) error {
 // @Produce json
 // @Param payload body UserLogin true "Login Body"
 // @Success 200 {object} Response
-// @Failure 400 {object} Response
+// @Failure 400 {object} ErrorResponse
 // @Router /auth/login [post]
 func Login(c *fiber.Ctx) error {
 	var userInput UserLogin
 
 	// Validate Input
 	if err := validator.ParseBodyAndValidate(c, &userInput); err != nil {
-		return err
+		return c.Status(http.StatusBadRequest).JSON(HTTPResponse(http.StatusBadRequest, "An Error Occurred", fiber.Map{"error": err}))
+
 	}
 
 	// Check If User Exists

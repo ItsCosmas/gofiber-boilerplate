@@ -54,7 +54,7 @@ func CreateBook(c *fiber.Ctx) error {
 
 	// Validate Book Input
 	if err := validator.ParseBodyAndValidate(c, &bookInput); err != nil {
-		return err
+		return c.Status(http.StatusBadRequest).JSON(HTTPErrorResponse(err))
 	}
 
 	// FIXME Edge case where a book doesn't exist or collection doesn't Exist
