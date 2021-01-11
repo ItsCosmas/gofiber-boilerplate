@@ -46,8 +46,8 @@ type BookOutput struct {
 // @Produce json
 // @Param payload body BookObject true "Book Body"
 // @Success 201 {object} Response
-// @Failure 400 {object} Response
-// @Failure 500 {object} Response
+// @Failure 400 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
 // @Router /books [post]
 func CreateBook(c *fiber.Ctx) error {
 	var bookInput BookObject
@@ -91,7 +91,7 @@ func CreateBook(c *fiber.Ctx) error {
 // @Tags Books
 // @Produce json
 // @Success 200 {object} Response
-// @Failure 500 {object} Response
+// @Failure 500 {object} ErrorResponse
 // @Router /books [get]
 func GetAllBooks(c *fiber.Ctx) error {
 	books, err := bookRepo.GetAll()
@@ -114,8 +114,8 @@ func GetAllBooks(c *fiber.Ctx) error {
 // @Produce json
 // @Param id path string true "ID"
 // @Success 200 {object} Response
-// @Success 404 {object} Response
-// @Failure 500 {object} Response
+// @Success 404 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
 // @Router /books/{id} [get]
 func GetBookByID(c *fiber.Ctx) error {
 	id := c.Params("id")
@@ -130,8 +130,8 @@ func GetBookByID(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(response)
 }
 
-// Update A Book
-// Delete A Book
+// TODO Update A Book
+// TODO Delete A Book
 
 // ============================================================
 // =================== Private Methods ========================

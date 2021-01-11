@@ -26,13 +26,6 @@ func Validate(payload interface{}) []*fiber.Error {
 					Message: fmt.Sprintf("%v must be valid", err.StructField()),
 				},
 			)
-
-			// fmt.Println(reflect.TypeOf(*Error))
-			// fmt.Println(err.StructField())
-			// fmt.Println(err.ActualTag())
-			// fmt.Println(err.Kind())
-			// fmt.Println(err.Value())
-			// fmt.Println(err.Param())
 		}
 		return errorList
 	}
@@ -48,7 +41,7 @@ func ParseBody(c *fiber.Ctx, body interface{}) []*fiber.Error {
 		var errorList []*fiber.Error
 		errorList = append(
 			errorList,
-			// fiber.ErrBadRequest,
+			fiber.ErrBadRequest,
 		)
 
 		return errorList
@@ -71,8 +64,7 @@ func ParseBodyAndValidate(c *fiber.Ctx, body interface{}) []*fiber.Error {
 	return Validate(body)
 }
 
-// CUSTOM VALIDATION RULES =============================================
-
+// TODO CUSTOM VALIDATION RULES =========================
 // Password validation rule: required,min=6,max=100
 var _ = validate.RegisterValidation("password", func(fl validator.FieldLevel) bool {
 	l := len(fl.Field().String())
