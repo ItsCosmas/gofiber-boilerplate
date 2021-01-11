@@ -2,7 +2,6 @@ package validator
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
@@ -11,33 +10,31 @@ import (
 var validate = validator.New()
 
 // Validate validates the input struct
-func Validate(payload interface{}) *fiber.Error {
+func Validate(payload interface{}) []*fiber.Error {
 	err := validate.Struct(payload)
 
 	if err != nil {
-		var errors []string
-		// TODO
-		// Better Error Handling Here
-		fmt.Println("------ List of tag fields with error ---------")
+		// Empty errors slice to store the errors
+		var errorList []*fiber.Error
 		for _, err := range err.(validator.ValidationErrors) {
-			errors = append(
-				errors,
-				fmt.Sprintf("`%v` with value `%v` doesn't satisfy the `%v` constraint", err.Field(), err.Value(), err.Tag()),
+
+			// TODO - A more specific validation message can be returned
+			errorList = append(
+				errorList,
+				&fiber.Error{
+					Code:    fiber.StatusBadRequest,
+					Message: fmt.Sprintf("%v must be valid", err.StructField()),
+				},
 			)
-			fmt.Println(err.StructField())
-			fmt.Println(err.ActualTag())
-			fmt.Println(err.Kind())
-			fmt.Println(err.Value())
-			fmt.Println(err.Param())
-		}
 
-		fmt.Println("---------------")
-
-		// TODO Here We will Now Fine Tune Errors
-		return &fiber.Error{
-			Code:    fiber.StatusBadRequest,
-			Message: strings.Join(errors, ","),
+			// fmt.Println(reflect.TypeOf(*Error))
+			// fmt.Println(err.StructField())
+			// fmt.Println(err.ActualTag())
+			// fmt.Println(err.Kind())
+			// fmt.Println(err.Value())
+			// fmt.Println(err.Param())
 		}
+		return errorList
 	}
 
 	return nil
@@ -46,12 +43,15 @@ func Validate(payload interface{}) *fiber.Error {
 // ParseBody is helper function for parsing the body.
 // Is any error occurs it will panic.
 // Its just a helper function to avoid writing if condition again n again.
-func ParseBody(c *fiber.Ctx, body interface{}) *fiber.Error {
+func ParseBody(c *fiber.Ctx, body interface{}) []*fiber.Error {
 	if err := c.BodyParser(body); err != nil {
-		fmt.Println("=======================")
-		fmt.Println(err)
-		fmt.Println("=======================")
-		return fiber.ErrBadRequest
+		var errorList []*fiber.Error
+		errorList = append(
+			errorList,
+			// fiber.ErrBadRequest,
+		)
+
+		return errorList
 	}
 
 	return nil
@@ -60,7 +60,7 @@ func ParseBody(c *fiber.Ctx, body interface{}) *fiber.Error {
 // ParseBodyAndValidate is helper function for parsing the body.
 // Is any error occurs it will panic.
 // Its just a helper function to avoid writing if condition again n again.
-func ParseBodyAndValidate(c *fiber.Ctx, body interface{}) *fiber.Error {
+func ParseBodyAndValidate(c *fiber.Ctx, body interface{}) []*fiber.Error {
 
 	// First We Parse
 	if err := ParseBody(c, body); err != nil {
