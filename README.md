@@ -11,7 +11,7 @@
 -   [godotenv](https://pkg.go.dev/github.com/joho/godotenv?tab=doc)
 -   [uuid](https://github.com/google/uuid)
 -   [Go Mongo Driver](https://go.mongodb.org/mongo-driver)
--   [Go Playground Validator](https://github.com/go-playground/validator/v10)
+-   [Go Playground Validator](https://github.com/go-playground/validator)
 
 ---
 
