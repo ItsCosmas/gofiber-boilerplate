@@ -61,7 +61,7 @@ docker-compose --env-file ./src/.env down      # docker-compose down (Shutdown A
 ```
 
 -   API `http://localhost:8000/api/v1`
--   Swagger Doc `http://localhost:8000/docs`
+-   Swagger Doc `http://localhost:8000/api/v1/docs`
 
 ---
 
