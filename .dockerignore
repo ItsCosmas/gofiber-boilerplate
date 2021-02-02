@@ -18,8 +18,6 @@ Dockerfile
 
 # misc
 .travis.yml
-# swagger docs
-docs
 
 # postgres and mongo persistence folder
 postgres_data
