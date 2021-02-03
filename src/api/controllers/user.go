@@ -58,7 +58,7 @@ func Register(c *fiber.Ctx) error {
 
 	u := mapInputToUser(userInput)
 
-	// Hash Password and Finally Save User To DB
+	// Hash Password
 	hashedPass, _ := passwordUtil.HashPassword(userInput.Password)
 	u.Password = hashedPass
 
@@ -68,7 +68,7 @@ func Register(c *fiber.Ctx) error {
 		return c.Status(http.StatusInternalServerError).JSON(response)
 	}
 
-	userOutput := mapToUserOutPut(&u)
+	userOutput := mapUserToOutPut(&u)
 	response := HTTPResponse(http.StatusCreated, "User Registered", userOutput)
 	return c.Status(http.StatusCreated).JSON(response)
 
@@ -113,7 +113,7 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	// Return User and Token
-	return c.Status(http.StatusOK).JSON(HTTPResponse(http.StatusOK, "Login Success", fiber.Map{"user": mapToUserOutPut(user), "token": token}))
+	return c.Status(http.StatusOK).JSON(HTTPResponse(http.StatusOK, "Login Success", fiber.Map{"user": mapUserToOutPut(user), "token": token}))
 
 }
 
@@ -130,7 +130,7 @@ func mapInputToUser(userInput UserObject) user.User {
 	}
 }
 
-func mapToUserOutPut(u *user.User) *UserOutput {
+func mapUserToOutPut(u *user.User) *UserOutput {
 	return &UserOutput{
 		ID:             u.ExternalID,
 		FullName:       u.FullName,
