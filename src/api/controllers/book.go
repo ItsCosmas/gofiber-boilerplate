@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 	"time"
 
 	validator "gofiber-boilerplate/api/common/validator"
@@ -28,7 +30,7 @@ type BookObject struct {
 
 // BookOutput is the output format of the book
 type BookOutput struct {
-	ExternalID    string   `json:"id"`
+	ExternalID    string   `json:"bookID"`
 	Title         string   `json:"title"`
 	Authors       []string `json:"authors"`
 	Description   string   `json:"description"`
@@ -43,18 +45,20 @@ type BookOutput struct {
 // @Summary Create Book
 // @Description Creates a new book
 // @Tags Books
+// @Accept json
+// @Param Authorization header string true "With the Bearer started"
 // @Produce json
 // @Param payload body BookObject true "Book Body"
 // @Success 201 {object} Response
-// @Failure 400 {object} ErrorResponse
-// @Failure 500 {object} ErrorResponse
+// @Failure 400 {array} ErrorResponse
+// @Failure 500 {array} ErrorResponse
 // @Router /books [post]
 func CreateBook(c *fiber.Ctx) error {
 	var bookInput BookObject
 
 	// Validate Book Input
 	if err := validator.ParseBodyAndValidate(c, &bookInput); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(HTTPErrorResponse(err))
+		return c.Status(http.StatusBadRequest).JSON(HTTPFiberErrorResponse(err))
 	}
 
 	// FIXME Edge case where a book doesn't exist or collection doesn't Exist
@@ -75,8 +79,16 @@ func CreateBook(c *fiber.Ctx) error {
 
 	// Save Book To DB
 	if _, err := bookRepo.Create(&b); err != nil {
-		response := HTTPResponse(http.StatusInternalServerError, "Book Not Created", err.Error())
-		return c.Status(http.StatusInternalServerError).JSON(response)
+		errorList = nil
+		errorList = append(
+			errorList,
+			&Response{
+				Code:    http.StatusInternalServerError,
+				Message: "An Error Occurred Creating the Book",
+				Data:    err.Error(),
+			},
+		)
+		return c.Status(http.StatusInternalServerError).JSON(HTTPErrorResponse(errorList))
 	}
 
 	bookOutput := mapToBookOutPut(&b)
@@ -91,13 +103,24 @@ func CreateBook(c *fiber.Ctx) error {
 // @Tags Books
 // @Produce json
 // @Success 200 {object} Response
-// @Failure 500 {object} ErrorResponse
+// @Failure 400 {array} ErrorResponse
+// @Success 404 {array} ErrorResponse
+// @Failure 500 {array} ErrorResponse
 // @Router /books [get]
 func GetAllBooks(c *fiber.Ctx) error {
 	books, err := bookRepo.GetAll()
 	if err != nil {
-		response := HTTPResponse(http.StatusInternalServerError, "Error Getting All Books", err.Error())
-		return c.Status(http.StatusInternalServerError).JSON(response)
+		errorList = nil
+		errorList = append(
+			errorList,
+			&Response{
+				Code:    http.StatusInternalServerError,
+				Message: "Error Getting All Books",
+				Data:    err.Error(),
+			},
+		)
+
+		return c.Status(http.StatusInternalServerError).JSON(HTTPErrorResponse(errorList))
 	}
 
 	booksOutput := mapToBooksOutput(books)
@@ -111,22 +134,59 @@ func GetAllBooks(c *fiber.Ctx) error {
 // @Summary Get Book By a Given ID
 // @Description Returns a single book with specified id
 // @Tags Books
+// @Param bookID path string true "bookID"
 // @Produce json
-// @Param id path string true "ID"
 // @Success 200 {object} Response
-// @Success 404 {object} ErrorResponse
-// @Failure 500 {object} ErrorResponse
-// @Router /books/{id} [get]
+// @Success 404 {array} ErrorResponse
+// @Failure 500 {array} ErrorResponse
+// @Router /books/{bookID} [get]
 func GetBookByID(c *fiber.Ctx) error {
-	id := c.Params("id")
-	book, err := bookRepo.GetByID(id)
+	bookID := c.Params("bookID")
 
-	if err != nil {
-		response := HTTPResponse(http.StatusNotFound, "Cannot Get Book with Specified ID", err.Error())
-		return c.Status(http.StatusNotFound).JSON(response)
+	if bookID == "" {
+		errorList = nil
+		errorList = append(
+			errorList,
+			&Response{
+				Code:    http.StatusNotAcceptable,
+				Message: "You must Provide a Book ID",
+				Data:    nil,
+			},
+		)
+		return c.Status(http.StatusNotAcceptable).JSON(HTTPErrorResponse(errorList))
 	}
 
-	response := HTTPResponse(http.StatusOK, "Book with Specified ID", mapToBookOutPut(book))
+	book, err := bookRepo.GetByID(bookID)
+
+	if err != nil {
+
+		if strings.Contains(err.Error(), "no documents") {
+			errorList = nil
+			errorList = append(
+				errorList,
+				&Response{
+					Code:    http.StatusNotFound,
+					Message: fmt.Sprintf("Cannot Get Book with Specified bookID: %s", bookID),
+					Data:    err.Error(),
+				},
+			)
+			return c.Status(http.StatusNotFound).JSON(HTTPErrorResponse(errorList))
+		}
+
+		errorList = nil
+		errorList = append(
+			errorList,
+			&Response{
+				Code:    http.StatusInternalServerError,
+				Message: fmt.Sprintf("Cannot Get Book with Specified ID: %s", bookID),
+				Data:    err.Error(),
+			},
+		)
+
+		return c.Status(http.StatusInternalServerError).JSON(HTTPErrorResponse(errorList))
+	}
+
+	response := HTTPResponse(http.StatusOK, fmt.Sprintf("Book with Specified ID: %s", bookID), mapToBookOutPut(book))
 	return c.Status(http.StatusOK).JSON(response)
 }
 
