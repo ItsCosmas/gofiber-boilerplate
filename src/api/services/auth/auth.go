@@ -32,6 +32,5 @@ func IssueToken(u user.User) (string, error) {
 	}
 
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	t, _ := tokenClaims.SignedString([]byte(cfg.GetConfig().JWTSecret))
-	return t, nil
+	return tokenClaims.SignedString([]byte(cfg.GetConfig().JWTSecret))
 }
