@@ -46,14 +46,16 @@ type UserOutput struct {
 // @Produce json
 // @Param payload body UserObject true "Register Body"
 // @Success 201 {object} Response
-// @Failure 400 {object} ErrorResponse
+// @Failure 400 {array} ErrorResponse
+// @Failure 401 {array} ErrorResponse
+// @Failure 500 {array} ErrorResponse
 // @Router /auth/register [post]
 func Register(c *fiber.Ctx) error {
 	var userInput UserObject
 
 	// Validate Input
 	if err := validator.ParseBodyAndValidate(c, &userInput); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(HTTPErrorResponse(err))
+		return c.Status(http.StatusBadRequest).JSON(HTTPFiberErrorResponse(err))
 	}
 
 	u := mapInputToUser(userInput)
@@ -81,35 +83,60 @@ func Register(c *fiber.Ctx) error {
 // @Produce json
 // @Param payload body UserLogin true "Login Body"
 // @Success 200 {object} Response
-// @Failure 400 {object} ErrorResponse
+// @Failure 400 {array} ErrorResponse
 // @Router /auth/login [post]
 func Login(c *fiber.Ctx) error {
 	var userInput UserLogin
 
 	// Validate Input
 	if err := validator.ParseBodyAndValidate(c, &userInput); err != nil {
-		return c.Status(http.StatusBadRequest).JSON(HTTPResponse(http.StatusBadRequest, "An Error Occurred", fiber.Map{"error": err}))
+		return c.Status(http.StatusBadRequest).JSON(HTTPFiberErrorResponse(err))
 
 	}
 
 	// Check If User Exists
 	user, err := userRepo.GetByEmail(userInput.Email)
 	if err != nil {
-		return c.Status(http.StatusNotFound).JSON(HTTPResponse(http.StatusNotFound, "User Does Not Exist", nil))
+		errorList = nil
+		errorList = append(
+			errorList,
+			&Response{
+				Code:    http.StatusNotFound,
+				Message: "User Does Not Exist",
+				Data:    err.Error(),
+			},
+		)
+		return c.Status(http.StatusNotFound).JSON(HTTPErrorResponse(errorList))
 	}
 
 	// Check if Password is Correct (Hash and Compare DB Hash)
 	passwordIsCorrect := passwordUtil.CheckPasswordHash(userInput.Password, user.Password)
 	if !passwordIsCorrect {
-		return c.Status(http.StatusUnauthorized).JSON(HTTPResponse(http.StatusUnauthorized, "Email or Password is Incorrect", nil))
+		errorList = nil
+		errorList = append(
+			errorList,
+			&Response{
+				Code:    http.StatusUnauthorized,
+				Message: "Email or Password is Incorrect",
+				Data:    err.Error(),
+			},
+		)
+		return c.Status(http.StatusUnauthorized).JSON(HTTPErrorResponse(errorList))
 	}
 
 	// Issue Token
 	token, err := auth.IssueToken(*user)
 	if err != nil {
-		// return err
-		return c.Status(http.StatusInternalServerError).JSON(HTTPResponse(http.StatusInternalServerError, "Something Went Wrong: Could Not Issue Token", nil))
-
+		errorList = nil
+		errorList = append(
+			errorList,
+			&Response{
+				Code:    http.StatusInternalServerError,
+				Message: "Something Went Wrong: Could Not Issue Token",
+				Data:    err.Error(),
+			},
+		)
+		return c.Status(http.StatusInternalServerError).JSON(HTTPErrorResponse(errorList))
 	}
 
 	// Return User and Token
