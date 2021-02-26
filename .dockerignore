@@ -20,5 +20,5 @@ Dockerfile
 .travis.yml
 
 # postgres and mongo persistence folder
-postgres_data
-mongodata
+postgres_data/
+mongodata/
