@@ -25,3 +25,7 @@ tmp
 
 # misc
 .DS_Store
+
+# Build and dist folders created while building docker prod image
+build/
+dist/
