@@ -13,7 +13,7 @@ import (
 // RequireLoggedIn ensures access only to logged in users by checking for token presence and validity
 func RequireLoggedIn() fiber.Handler {
 	return jwtware.New(jwtware.Config{
-		SigningKey:   []byte(cfg.GetConfig().JWTSecret),
+		SigningKey:   []byte(cfg.GetConfig().JWTAccessSecret),
 		ErrorHandler: jwtError,
 	})
 }

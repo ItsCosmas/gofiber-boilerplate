@@ -125,7 +125,9 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	// Issue Token
-	token, err := auth.IssueToken(*user)
+	accessToken, err := auth.IssueAccessToken(*user)
+	refreshToken, err := auth.IssueRefreshToken(*user)
+
 	if err != nil {
 		errorList = nil
 		errorList = append(
@@ -139,8 +141,10 @@ func Login(c *fiber.Ctx) error {
 		return c.Status(http.StatusInternalServerError).JSON(HTTPErrorResponse(errorList))
 	}
 
+	// Save Tokens to Redis
+
 	// Return User and Token
-	return c.Status(http.StatusOK).JSON(HTTPResponse(http.StatusOK, "Login Success", fiber.Map{"user": mapUserToOutPut(user), "token": token}))
+	return c.Status(http.StatusOK).JSON(HTTPResponse(http.StatusOK, "Login Success", fiber.Map{"user": mapUserToOutPut(user), "access_token": accessToken, "refresh_token": refreshToken}))
 
 }
 
