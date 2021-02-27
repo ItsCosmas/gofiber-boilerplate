@@ -16,6 +16,7 @@ services:
     depends_on:
       - postgres
       - mongo
+      - redis
     networks:
       - 'gofiber-net'
 
@@ -68,7 +69,7 @@ services:
   # Mongo Express Web-based MongoDB admin interface
   mongo_express:
     image: mongo-express
-    container_name: gofiber_mongo_express
+    container_name: gofiber_mongo-express
     depends_on:
       - 'mongo'
     ports:
@@ -78,6 +79,37 @@ services:
       driver: none
     networks:
       - 'gofiber-net'
+      
+
+  # Redis
+  redis:
+    image: 'redis:6.2-buster'
+    container_name: gofiber_redis
+    ports:
+      - '6379:6379'
+    restart: always
+    logging:
+      driver: none
+    networks:
+      - 'gofiber-net'
+  
+  # Redis Commander
+  redis-commander:
+    container_name: gofiber_redis-commander
+    # hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    depends_on:
+      - redis
+    restart: always
+    environment:
+    - REDIS_HOSTS=local:redis:6379
+    ports:
+    - "8082:8081"
+    logging:
+      driver: none
+    networks:
+      - 'gofiber-net'
+    
 
 networks:
   gofiber-net:

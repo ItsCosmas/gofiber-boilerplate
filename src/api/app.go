@@ -61,6 +61,9 @@ func Run() {
 	// Connect to Mongo
 	db.ConnectMongo()
 
+	// Connect to Redis
+	db.ConnectRedis()
+
 	/*
 		============ Set Up Middlewares ============
 	*/

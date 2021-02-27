@@ -17,11 +17,13 @@ type Config struct {
 	Env      string         `env:"ENV"`
 	Postgres PostgresConfig `json:"postgres"`
 	Mongo    MongoDBConfig  `json:"mongo"`
+	Redis    RedisConfig    `json:"redis"`
 	// Mailgun   MailgunConfig  `json:"mailgun"`
-	JWTSecret string `env:"JWT_SIGN_KEY"`
-	JWTIssuer string `env:"JWT_ISSUER"`
-	Host      string `env:"APP_HOST"`
-	Port      string `env:"APP_PORT"`
+	JWTAccessSecret  string `env:"JWT_ACCESS_SIGN_KEY"`
+	JWTRefreshSecret string `env:"JWT_REFRESH_SIGN_KEY"`
+	JWTIssuer        string `env:"JWT_ISSUER"`
+	Host             string `env:"APP_HOST"`
+	Port             string `env:"APP_PORT"`
 	// FromEmail string         `env:"EMAIL_FROM"`
 }
 
@@ -50,11 +52,13 @@ func GetConfig() Config {
 		Env:      os.Getenv("ENV"),
 		Postgres: GetPostgresConfig(),
 		Mongo:    GetMongoDBConfig(),
+		Redis:    GetRedisConfig(),
 		// Mailgun:   GetMailgunConfig(),
-		JWTSecret: os.Getenv("JWT_SIGN_KEY"),
-		JWTIssuer: os.Getenv("JWT_ISSUER"),
-		Host:      os.Getenv("APP_HOST"),
-		Port:      os.Getenv("APP_PORT"),
+		JWTAccessSecret:  os.Getenv("JWT_ACCESS_SIGN_KEY"),
+		JWTRefreshSecret: os.Getenv("JWT_REFRESH_SIGN_KEY"),
+		JWTIssuer:        os.Getenv("JWT_ISSUER"),
+		Host:             os.Getenv("APP_HOST"),
+		Port:             os.Getenv("APP_PORT"),
 		// FromEmail: os.Getenv("EMAIL_FROM"),
 	}
 }
