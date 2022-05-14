@@ -6,6 +6,7 @@ import (
 	passwordUtil "gofiber-boilerplate/api/common/passwordutil"
 	validator "gofiber-boilerplate/api/common/validator"
 	"gofiber-boilerplate/api/models/user"
+	ssn "gofiber-boilerplate/api/repositories/session"
 	userRepo "gofiber-boilerplate/api/repositories/user"
 	"gofiber-boilerplate/api/services/auth"
 
@@ -141,11 +142,36 @@ func Login(c *fiber.Ctx) error {
 		return c.Status(http.StatusInternalServerError).JSON(HTTPErrorResponse(errorList))
 	}
 
-	// Save Tokens to Redis
-
+	// Save Refresh Token to Redis
+	if err := ssn.SaveToken(user.ExternalID, refreshToken); err != nil {
+		errorList = nil
+		errorList = append(
+			errorList,
+			&Response{
+				Code:    http.StatusInternalServerError,
+				Message: "Something Went Wrong Saving Token Metadata",
+				Data:    err.Error(),
+			},
+		)
+		return c.Status(http.StatusInternalServerError).JSON(HTTPErrorResponse(errorList))
+	}
 	// Return User and Token
-	return c.Status(http.StatusOK).JSON(HTTPResponse(http.StatusOK, "Login Success", fiber.Map{"user": mapUserToOutPut(user), "access_token": accessToken, "refresh_token": refreshToken}))
+	return c.Status(http.StatusOK).JSON(HTTPResponse(http.StatusOK, "Login Success", fiber.Map{"user": mapUserToOutPut(user), "access_token": accessToken.Token, "refresh_token": refreshToken.Token}))
 
+}
+
+// Logout Godoc
+// @Summary Login
+// @Description Logs in a user
+// @Tags Auth
+// @Produce json
+// @Success 200 {object} Response
+// @Failure 500 {array} ErrorResponse
+// @Router /auth/logout [post]
+func Logout(c *fiber.Ctx) error {
+	// Here We get the token meta from access and refresh token passed from header
+	// We delete the refresh
+	return c.SendString("Logout Endpoint")
 }
 
 // ============================================================

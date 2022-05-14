@@ -43,15 +43,15 @@ func ConnectPostgres() {
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
-		fmt.Println(strings.Repeat("!", 40))
-		fmt.Println("☹️  Could Not Establish Postgres DB Connection")
-		fmt.Println(strings.Repeat("!", 40))
+		log.Println(strings.Repeat("!", 40))
+		log.Println("☹️  Could Not Establish Postgres DB Connection")
+		log.Println(strings.Repeat("!", 40))
 		log.Fatal(err)
 	}
 
-	fmt.Println(strings.Repeat("-", 40))
-	fmt.Println("😀 Connected To Postgres DB")
-	fmt.Println(strings.Repeat("-", 40))
+	log.Println(strings.Repeat("-", 40))
+	log.Println("😀 Connected To Postgres DB")
+	log.Println(strings.Repeat("-", 40))
 
 	PgDB = db
 }
@@ -67,16 +67,16 @@ func ConnectMongo() {
 	db := client.Database(cfg.GetConfig().Mongo.MongoDBName)
 
 	if err != nil {
-		fmt.Println(strings.Repeat("!", 40))
-		fmt.Println("☹️  Could Not Establish Mongo DB Connection")
-		fmt.Println(strings.Repeat("!", 40))
+		log.Println(strings.Repeat("!", 40))
+		log.Println("☹️  Could Not Establish Mongo DB Connection")
+		log.Println(strings.Repeat("!", 40))
 
 		log.Fatal(err)
 	}
 
-	fmt.Println(strings.Repeat("-", 40))
-	fmt.Println("😀 Connected To Mongo DB")
-	fmt.Println(strings.Repeat("-", 40))
+	log.Println(strings.Repeat("-", 40))
+	log.Println("😀 Connected To Mongo DB")
+	log.Println(strings.Repeat("-", 40))
 
 	MgDB = MongoInstance{
 		Client: client,
@@ -96,15 +96,15 @@ func ConnectRedis() {
 	pong, err := client.Ping(client.Context()).Result()
 
 	if err != nil {
-		fmt.Println(strings.Repeat("!", 40))
-		fmt.Println("☹️  Could Not Establish Redis Connection")
-		fmt.Println(strings.Repeat("!", 40))
+		log.Println(strings.Repeat("!", 40))
+		log.Println("☹️  Could Not Establish Redis Connection")
+		log.Println(strings.Repeat("!", 40))
 		log.Fatal(err)
 	}
 
-	fmt.Println(strings.Repeat("-", 40))
-	fmt.Printf("😀 Connected To Redis: %s\n", pong)
-	fmt.Println(strings.Repeat("-", 40))
+	log.Println(strings.Repeat("-", 40))
+	log.Printf("😀 Connected To Redis: %s\n", pong)
+	log.Println(strings.Repeat("-", 40))
 
 	RdDB = client
 }

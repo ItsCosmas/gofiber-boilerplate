@@ -6,8 +6,8 @@ import (
 	// Middlewares
 	"gofiber-boilerplate/api/middlewares"
 
-	swagger "github.com/arsmn/fiber-swagger/v2"
 	"github.com/gofiber/fiber/v2"
+	swagger "github.com/gofiber/swagger"
 )
 
 // SetupRoutes setups router
@@ -17,7 +17,7 @@ func SetupRoutes(app *fiber.App) {
 
 	v1 := api.Group("/v1")
 
-	v1.Use("/docs", swagger.Handler)
+	v1.Use("/docs", swagger.HandlerDefault)
 
 	v1.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
@@ -31,6 +31,9 @@ func SetupRoutes(app *fiber.App) {
 	auth := v1.Group("/auth")
 	auth.Post("/register", ctl.Register)
 	auth.Post("/login", ctl.Login)
+	// Requires authentication
+	auth.Post("/logout", ctl.Logout)
+	auth.Post("/refresh", ctl.RefreshAuth)
 
 	// Books
 	books := v1.Group("/books")

@@ -11,6 +11,13 @@ import (
 	"github.com/google/uuid"
 )
 
+// TokenDetails Represents token object
+type TokenDetails struct {
+	Token        string
+	TokenUUID    string
+	TokenExpires int64
+}
+
 // RefreshClaims represents refresh token JWT claims
 type RefreshClaims struct {
 	RefreshTokenID string `json:"refreshTokenID"`
@@ -28,12 +35,12 @@ type AccessClaims struct {
 }
 
 // IssueAccessToken generate access tokens used for auth
-func IssueAccessToken(u user.User) (string, error) {
+func IssueAccessToken(u user.User) (*TokenDetails, error) {
 	expireTime := time.Now().Add(time.Hour) // 1 hour
-
+	tokenUUID := uuid.New().String()
 	// Generate encoded token
 	claims := AccessClaims{
-		uuid.New().String(),
+		tokenUUID,
 		u.ExternalID,
 		u.Role,
 		jwt.StandardClaims{
@@ -43,16 +50,27 @@ func IssueAccessToken(u user.User) (string, error) {
 	}
 
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return tokenClaims.SignedString([]byte(cfg.GetConfig().JWTAccessSecret))
+	tk, err := tokenClaims.SignedString([]byte(cfg.GetConfig().JWTAccessSecret))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &TokenDetails{
+		Token:        tk,
+		TokenUUID:    tokenUUID,
+		TokenExpires: expireTime.Unix(),
+	}, nil
 }
 
 // IssueRefreshToken generate refresh tokens used for auth
-func IssueRefreshToken(u user.User) (string, error) {
+func IssueRefreshToken(u user.User) (*TokenDetails, error) {
 	expireTime := time.Now().Add((24 * time.Hour) * 14) // 14 days
+	tokenUUID := uuid.New().String()
 
 	// Generate encoded token
 	claims := RefreshClaims{
-		uuid.New().String(),
+		tokenUUID,
 		u.ExternalID,
 		u.Role,
 		jwt.StandardClaims{
@@ -62,5 +80,15 @@ func IssueRefreshToken(u user.User) (string, error) {
 	}
 
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return tokenClaims.SignedString([]byte(cfg.GetConfig().JWTRefreshSecret))
+	tk, err := tokenClaims.SignedString([]byte(cfg.GetConfig().JWTRefreshSecret))
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &TokenDetails{
+		Token:        tk,
+		TokenUUID:    uuid.New().String(),
+		TokenExpires: expireTime.Unix(),
+	}, nil
 }
