@@ -1,6 +1,5 @@
-
 # Start from golang base image
-FROM golang:1.16-alpine as builder
+FROM golang:1.24-alpine AS builder
 
 # Add Maintainer info
 LABEL maintainer="Cozy <devcosmas@gmail.com>"
@@ -13,13 +12,13 @@ RUN apk update && apk add --no-cache git
 WORKDIR /app
 
 # Copy go mod and sum files 
-COPY src/go.mod src/go.sum ./
+COPY go.mod go.sum ./
 
 # Download all dependencies. Dependencies will be cached if the go.mod and the go.sum files are not changed 
 RUN go mod download 
 
 # Copy the source from the current directory to the working Directory inside the container 
-COPY ./src .
+COPY . .
 
 # Build the Go app
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
@@ -29,11 +28,17 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 
+# Create a non-root user and group
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
 WORKDIR /opt/gofiber-app
 
-# Copy the Pre-built binary file from the previous stage. Observe we also copied the .env file
-COPY --from=builder /app/main .
-COPY --from=builder /app/.env .       
+# Copy binary and set ownership. bserve we also copied the .env file
+COPY --from=builder --chown=appuser:appgroup /app/main .
+COPY --from=builder --chown=appuser:appgroup /app/.env .
+
+# Switch to non-root user
+USER appuser
 
 # Expose port 8000
 EXPOSE 8000
