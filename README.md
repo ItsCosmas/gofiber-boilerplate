@@ -69,8 +69,8 @@ docker compose --env-file .env up        # docker compose up (Run App With AutoR
 docker compose --env-file .env down      # docker compose down (Shutdown App)
 ```
 
-- API `http://localhost:8000/api/v1`
-- Swagger Doc `http://localhost:8000/api/v1/swagger`
+- API [`http://localhost:8000/api/v1`](http://localhost:8000/api/v1)
+- Swagger Doc [`http://localhost:8000/api/v1/swagger`](http://localhost:8000/api/v1/swagger)
 
 ---
 
