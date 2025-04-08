@@ -21,17 +21,6 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
-// Run starts the app
-// @title Gofiber Boilerplate API
-// @version 1.0
-// @description This is my gofiber boilerplate api server.
-// @termsOfService http://swagger.io/terms/
-// @contact.name Cozy
-// @contact.url https://github.com/ItsCosmas
-// @contact.email devcosmas@gmail.com
-// @license.name MIT
-// @license.url https://github.com/ItsCosmas/gofiber-boilerplate/blob/master/LICENSE
-// @BasePath /api/v1
 func Run() {
 	app := fiber.New()
 
