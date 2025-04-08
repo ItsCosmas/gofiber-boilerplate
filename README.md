@@ -50,10 +50,10 @@
 cp src/.env.example src/.env
 ```
 
-2. Download Swag for generating docs
+2. Download and install Swag for generating docs
 
 ```sh
-go get -u github.com/swaggo/swag/cmd/swag
+go install github.com/swaggo/swag/cmd/swag@latest
 ```
 
 3. Run
