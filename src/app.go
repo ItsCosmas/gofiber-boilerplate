@@ -35,7 +35,10 @@ func Run() {
 	// db.PgDB.Migrator().DropTable(&user.User{})
 
 	// Migration
-	log.Fatal(db.PgDB.AutoMigrate(&models.User{}))
+	err := db.PgDB.AutoMigrate(&models.User{})
+	if err != nil {
+		return
+	}
 
 	// Connect to Mongo
 	db.ConnectMongo()
