@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"gofiber-boilerplate/src/models"
-	ssn "gofiber-boilerplate/src/repositories"
+	userRepo "gofiber-boilerplate/src/repositories"
 	"gofiber-boilerplate/src/services"
 	"net/http"
 
@@ -64,7 +64,7 @@ func RegisterUser(c *fiber.Ctx) error {
 	u.Password = hashedPass
 
 	// Save User To DB
-	if err := ssn.CreateUser(&u); err != nil {
+	if err := userRepo.CreateUser(&u); err != nil {
 		response := HTTPResponse(http.StatusInternalServerError, "User Not Registered", err.Error())
 		return c.Status(http.StatusInternalServerError).JSON(response)
 	}
@@ -94,7 +94,7 @@ func LoginUser(c *fiber.Ctx) error {
 	}
 
 	// Check If User Exists
-	user, err := ssn.GetUserByEmail(userInput.Email)
+	user, err := userRepo.GetUserByEmail(userInput.Email)
 	if err != nil {
 		errorList = nil
 		errorList = append(
@@ -141,7 +141,7 @@ func LoginUser(c *fiber.Ctx) error {
 	}
 
 	// Save Refresh Token to Redis
-	if err := ssn.SaveToken(user.ExternalID, refreshToken); err != nil {
+	if err := userRepo.SaveToken(user.ExternalID, refreshToken); err != nil {
 		errorList = nil
 		errorList = append(
 			errorList,

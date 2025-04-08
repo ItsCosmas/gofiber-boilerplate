@@ -5,7 +5,6 @@ import (
 
 	// database
 	db "gofiber-boilerplate/src/database"
-	// "gorm.io/gorm"
 )
 
 // CreateUser User
