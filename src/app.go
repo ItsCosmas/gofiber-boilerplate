@@ -2,6 +2,8 @@ package src
 
 import (
 	"fmt"
+	"github.com/gofiber/fiber/v2/log"
+	"gofiber-boilerplate/src/models"
 
 	// Configs
 	cfg "gofiber-boilerplate/src/configs"
@@ -12,9 +14,6 @@ import (
 	// database
 	db "gofiber-boilerplate/src/database"
 
-	// models
-	"gofiber-boilerplate/src/models/user"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -24,17 +23,11 @@ import (
 func Run() {
 	app := fiber.New()
 
-	/*
-		====== Setup Configs ============
-	*/
-
+	// Setup Configs
 	cfg.LoadConfig()
 	config := cfg.GetConfig()
 
-	/*
-		====== Setup DB ============
-	*/
-
+	// Setup DB
 	// Connect to Postgres
 	db.ConnectPostgres()
 
@@ -42,7 +35,7 @@ func Run() {
 	// db.PgDB.Migrator().DropTable(&user.User{})
 
 	// Migration
-	db.PgDB.AutoMigrate(&user.User{})
+	log.Fatal(db.PgDB.AutoMigrate(&models.User{}))
 
 	// Connect to Mongo
 	db.ConnectMongo()
@@ -50,10 +43,7 @@ func Run() {
 	// Connect to Redis
 	db.ConnectRedis()
 
-	/*
-		============ Set Up Middlewares ============
-	*/
-
+	// Set Up Middlewares
 	// Default Log Middleware
 	app.Use(logger.New())
 
@@ -66,12 +56,10 @@ func Run() {
 		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 
-	/*
-		============ Set Up Routes ============
-	*/
+	// Set Up Routes
 	routes.SetupRoutes(app)
 
 	// Run the app and listen on given port
 	port := fmt.Sprintf(":%s", config.Port)
-	app.Listen(port)
+	log.Fatal(app.Listen(port))
 }
