@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: sh -c "cd src && go mod download && air"
+    command: sh -c "go mod download && air"
     environment:
       - PORT=8000
     ports:
