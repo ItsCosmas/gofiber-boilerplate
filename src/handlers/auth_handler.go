@@ -1,17 +1,15 @@
-package controllers
+package handlers
 
 import (
+	"gofiber-boilerplate/src/models"
+	ssn "gofiber-boilerplate/src/repositories"
+	"gofiber-boilerplate/src/services"
 	"net/http"
-
-	passwordUtil "gofiber-boilerplate/src/common/passwordutil"
-	validator "gofiber-boilerplate/src/common/validator"
-	"gofiber-boilerplate/src/models/user"
-	ssn "gofiber-boilerplate/src/repositories/session"
-	userRepo "gofiber-boilerplate/src/repositories/user"
-	"gofiber-boilerplate/src/services/auth"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	passwordUtil "gofiber-boilerplate/src/common/passwordutil"
+	"gofiber-boilerplate/src/common/validator"
 )
 
 // UserObject is the structure of the user
@@ -40,18 +38,18 @@ type UserOutput struct {
 	ID             string `json:"id"`
 }
 
-// Register Godoc
-// @Summary Register
+// RegisterUser Godoc
+// @Summary RegisterUser
 // @Description Registers a user
 // @Tags Auth
 // @Produce json
-// @Param payload body UserObject true "Register Body"
+// @Param payload body UserObject true "RegisterUser Body"
 // @Success 201 {object} Response
 // @Failure 400 {array} ErrorResponse
 // @Failure 401 {array} ErrorResponse
 // @Failure 500 {array} ErrorResponse
 // @Router /auth/register [post]
-func Register(c *fiber.Ctx) error {
+func RegisterUser(c *fiber.Ctx) error {
 	var userInput UserObject
 
 	// Validate Input
@@ -66,7 +64,7 @@ func Register(c *fiber.Ctx) error {
 	u.Password = hashedPass
 
 	// Save User To DB
-	if err := userRepo.Create(&u); err != nil {
+	if err := ssn.CreateUser(&u); err != nil {
 		response := HTTPResponse(http.StatusInternalServerError, "User Not Registered", err.Error())
 		return c.Status(http.StatusInternalServerError).JSON(response)
 	}
@@ -77,16 +75,16 @@ func Register(c *fiber.Ctx) error {
 
 }
 
-// Login Godoc
-// @Summary Login
+// LoginUser Godoc
+// @Summary LoginUser
 // @Description Logs in a user
 // @Tags Auth
 // @Produce json
-// @Param payload body UserLogin true "Login Body"
+// @Param payload body UserLogin true "LoginUser Body"
 // @Success 200 {object} Response
 // @Failure 400 {array} ErrorResponse
 // @Router /auth/login [post]
-func Login(c *fiber.Ctx) error {
+func LoginUser(c *fiber.Ctx) error {
 	var userInput UserLogin
 
 	// Validate Input
@@ -96,7 +94,7 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	// Check If User Exists
-	user, err := userRepo.GetByEmail(userInput.Email)
+	user, err := ssn.GetUserByEmail(userInput.Email)
 	if err != nil {
 		errorList = nil
 		errorList = append(
@@ -126,8 +124,8 @@ func Login(c *fiber.Ctx) error {
 	}
 
 	// Issue Token
-	accessToken, err := auth.IssueAccessToken(*user)
-	refreshToken, err := auth.IssueRefreshToken(*user)
+	accessToken, err := services.IssueAccessToken(*user)
+	refreshToken, err := services.IssueRefreshToken(*user)
 
 	if err != nil {
 		errorList = nil
@@ -156,30 +154,43 @@ func Login(c *fiber.Ctx) error {
 		return c.Status(http.StatusInternalServerError).JSON(HTTPErrorResponse(errorList))
 	}
 	// Return User and Token
-	return c.Status(http.StatusOK).JSON(HTTPResponse(http.StatusOK, "Login Success", fiber.Map{"user": mapUserToOutPut(user), "access_token": accessToken.Token, "refresh_token": refreshToken.Token}))
+	return c.Status(http.StatusOK).JSON(HTTPResponse(http.StatusOK, "LoginUser Success", fiber.Map{"user": mapUserToOutPut(user), "access_token": accessToken.Token, "refresh_token": refreshToken.Token}))
 
 }
 
-// Logout Godoc
-// @Summary Login
+// LogoutUser Godoc
+// @Summary LoginUser
 // @Description Logs in a user
 // @Tags Auth
 // @Produce json
 // @Success 200 {object} Response
 // @Failure 500 {array} ErrorResponse
 // @Router /auth/logout [post]
-func Logout(c *fiber.Ctx) error {
+func LogoutUser(c *fiber.Ctx) error {
 	// Here We get the token meta from access and refresh token passed from header
 	// We delete the refresh
-	return c.SendString("Logout Endpoint")
+	return c.SendString("LogoutUser Endpoint")
+}
+
+// RefreshAuth Godoc
+// @Summary Refresh Auth
+// @Description Returns a fresh access token
+// @Tags Auth
+// @Produce json
+// @Param payload body UserLogin true "LoginUser Body"
+// @Success 200 {object} Response
+// @Failure 400 {array} ErrorResponse
+// @Router /auth/refresh [post]
+func RefreshAuth(c *fiber.Ctx) error {
+	return c.SendString("Refresh Auth Endpoint")
 }
 
 // ============================================================
 // =================== Private Methods ========================
 // ============================================================
 
-func mapInputToUser(userInput UserObject) user.User {
-	return user.User{
+func mapInputToUser(userInput UserObject) models.User {
+	return models.User{
 		FullName:   userInput.FullName,
 		Email:      userInput.Email,
 		Password:   userInput.Password,
@@ -187,7 +198,7 @@ func mapInputToUser(userInput UserObject) user.User {
 	}
 }
 
-func mapUserToOutPut(u *user.User) *UserOutput {
+func mapUserToOutPut(u *models.User) *UserOutput {
 	return &UserOutput{
 		ID:             u.ExternalID,
 		FullName:       u.FullName,

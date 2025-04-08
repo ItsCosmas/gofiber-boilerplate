@@ -1,4 +1,4 @@
-package session
+package models
 
 // Save User Session Info
 // 1. Device

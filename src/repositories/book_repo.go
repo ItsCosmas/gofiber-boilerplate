@@ -1,7 +1,8 @@
-package book
+package repositories
 
 import (
 	"context"
+	"gofiber-boilerplate/src/models"
 	"log"
 	"time"
 
@@ -9,12 +10,10 @@ import (
 
 	// database
 	db "gofiber-boilerplate/src/database"
-	// book model
-	"gofiber-boilerplate/src/models/book"
 )
 
-// Create Book
-func Create(book *book.Book) (*book.Book, error) {
+// CreateBook Book
+func CreateBook(book *models.Book) (*models.Book, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel() // releases resources if CreateBook completes before timeout elapses
 
@@ -27,9 +26,9 @@ func Create(book *book.Book) (*book.Book, error) {
 	return book, nil
 }
 
-// GetAll Returns all Books
-func GetAll() ([]*book.Book, error) {
-	var results []*book.Book
+// GetAllBooks Returns all Books
+func GetAllBooks() ([]*models.Book, error) {
+	var results []*models.Book
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -40,7 +39,7 @@ func GetAll() ([]*book.Book, error) {
 	}
 	defer cur.Close(ctx)
 	// bson.M
-	var b *book.Book
+	var b *models.Book
 	for cur.Next(ctx) {
 		err := cur.Decode(&b)
 		if err != nil {
@@ -56,9 +55,9 @@ func GetAll() ([]*book.Book, error) {
 	return results, nil
 }
 
-// GetByID gets book with the given id
-func GetByID(id string) (*book.Book, error) {
-	var book book.Book
+// GetBookByID gets book with the given id
+func GetBookByID(id string) (*models.Book, error) {
+	var book models.Book
 	filter := bson.M{"external_id": id}
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -72,9 +71,9 @@ func GetByID(id string) (*book.Book, error) {
 	return &book, nil
 }
 
-// GetByISBN gets book with the given ISBN
-func GetByISBN(isbn string) (*book.Book, error) {
-	var book book.Book
+// GetBookByISBN gets book with the given ISBN
+func GetBookByISBN(isbn string) (*models.Book, error) {
+	var book models.Book
 	filter := bson.M{"isbn": isbn}
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -88,12 +87,12 @@ func GetByISBN(isbn string) (*book.Book, error) {
 	return &book, nil
 }
 
-// Update gets the book with given id and updates it
-func Update(id string) (*book.Book, error) {
+// UpdateBook gets the book with given id and updates it
+func UpdateBook(id string) (*models.Book, error) {
 	return nil, nil
 }
 
-// Delete removes the given book id
-func Delete(id string) error {
+// DeleteBook removes the given book id
+func DeleteBook(id string) error {
 	return nil
 }

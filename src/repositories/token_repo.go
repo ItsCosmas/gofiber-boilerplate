@@ -1,10 +1,10 @@
-package session
+package repositories
 
 import (
 	"context"
 	"errors"
 	db "gofiber-boilerplate/src/database"
-	"gofiber-boilerplate/src/services/auth"
+	"gofiber-boilerplate/src/services"
 	"time"
 )
 
@@ -25,7 +25,7 @@ type TokenDetails struct {
 }
 
 // SaveToken Saves the Token to Redis
-func SaveToken(userID string, rt *auth.TokenDetails) error {
+func SaveToken(userID string, rt *services.TokenDetails) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
@@ -77,8 +77,8 @@ func DeleteTokens(atkm *TokenMeta, rtkm *TokenMeta) error {
 	return nil
 }
 
-// DeleteRefresh deletes refresh token
-func DeleteRefresh(refreshUUID string) error {
+// DeleteRefreshToken deletes refresh token
+func DeleteRefreshToken(refreshUUID string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	//delete refresh token

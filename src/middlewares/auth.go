@@ -5,12 +5,12 @@ import (
 
 	cfg "gofiber-boilerplate/src/configs"
 
-	jwt "github.com/form3tech-oss/jwt-go"
+	"github.com/form3tech-oss/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v2"
 )
 
-// RequireLoggedIn ensures access only to logged in users by checking for token presence and validity
+// RequireLoggedIn ensures access only to logged-in users by checking for token presence and validity
 func RequireLoggedIn() fiber.Handler {
 	return jwtware.New(jwtware.Config{
 		SigningKey:   []byte(cfg.GetConfig().JWTAccessSecret),

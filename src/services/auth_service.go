@@ -1,9 +1,8 @@
-package auth
+package services
 
 import (
+	"gofiber-boilerplate/src/models"
 	"time"
-
-	"gofiber-boilerplate/src/models/user"
 
 	cfg "gofiber-boilerplate/src/configs"
 
@@ -35,7 +34,7 @@ type AccessClaims struct {
 }
 
 // IssueAccessToken generate access tokens used for auth
-func IssueAccessToken(u user.User) (*TokenDetails, error) {
+func IssueAccessToken(u models.User) (*TokenDetails, error) {
 	expireTime := time.Now().Add(time.Hour) // 1 hour
 	tokenUUID := uuid.New().String()
 	// Generate encoded token
@@ -64,7 +63,7 @@ func IssueAccessToken(u user.User) (*TokenDetails, error) {
 }
 
 // IssueRefreshToken generate refresh tokens used for auth
-func IssueRefreshToken(u user.User) (*TokenDetails, error) {
+func IssueRefreshToken(u models.User) (*TokenDetails, error) {
 	expireTime := time.Now().Add((24 * time.Hour) * 14) // 14 days
 	tokenUUID := uuid.New().String()
 

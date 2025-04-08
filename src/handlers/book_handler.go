@@ -1,17 +1,16 @@
-package controllers
+package handlers
 
 import (
 	"fmt"
+	"gofiber-boilerplate/src/models"
+	bookRepo "gofiber-boilerplate/src/repositories"
 	"net/http"
 	"strings"
 	"time"
 
-	validator "gofiber-boilerplate/src/common/validator"
-	"gofiber-boilerplate/src/models/book"
-	bookRepo "gofiber-boilerplate/src/repositories/book"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
+	validator "gofiber-boilerplate/src/common/validator"
 )
 
 // BookObject is the Structure Of The Book
@@ -42,7 +41,7 @@ type BookOutput struct {
 }
 
 // CreateBook Godoc
-// @Summary Create Book
+// @Summary CreateBook Book
 // @Description Creates a new book
 // @Tags Books
 // @Accept json
@@ -63,7 +62,7 @@ func CreateBook(c *fiber.Ctx) error {
 
 	// FIXME Edge case where a book doesn't exist or collection doesn't Exist
 
-	// book, err := bookRepo.GetByISBN(bookInput.ISBN)
+	// book, err := bookRepo.GetBookByISBN(bookInput.ISBN)
 
 	// if err != nil {
 	// 	response := HTTPResponse(http.StatusInternalServerError, "Book Not Created", err.Error())
@@ -78,7 +77,7 @@ func CreateBook(c *fiber.Ctx) error {
 	b := mapInputToBook(bookInput)
 
 	// Save Book To DB
-	if _, err := bookRepo.Create(&b); err != nil {
+	if _, err := bookRepo.CreateBook(&b); err != nil {
 		errorList = nil
 		errorList = append(
 			errorList,
@@ -108,7 +107,7 @@ func CreateBook(c *fiber.Ctx) error {
 // @Failure 500 {array} ErrorResponse
 // @Router /books [get]
 func GetAllBooks(c *fiber.Ctx) error {
-	books, err := bookRepo.GetAll()
+	books, err := bookRepo.GetAllBooks()
 	if err != nil {
 		errorList = nil
 		errorList = append(
@@ -156,7 +155,7 @@ func GetBookByID(c *fiber.Ctx) error {
 		return c.Status(http.StatusNotAcceptable).JSON(HTTPErrorResponse(errorList))
 	}
 
-	book, err := bookRepo.GetByID(bookID)
+	book, err := bookRepo.GetBookByID(bookID)
 
 	if err != nil {
 
@@ -190,14 +189,14 @@ func GetBookByID(c *fiber.Ctx) error {
 	return c.Status(http.StatusOK).JSON(response)
 }
 
-// TODO Update A Book
-// TODO Delete A Book
+// TODO UpdateBook A Book
+// TODO DeleteBook A Book
 
 // ============================================================
 // =================== Private Methods ========================
 // ============================================================
-func mapInputToBook(b BookObject) book.Book {
-	return book.Book{
+func mapInputToBook(b BookObject) models.Book {
+	return models.Book{
 		ExternalID:    uuid.New().String(),
 		Title:         b.Title,
 		Authors:       b.Authors,
@@ -213,7 +212,7 @@ func mapInputToBook(b BookObject) book.Book {
 	}
 }
 
-func mapToBookOutPut(b *book.Book) *BookOutput {
+func mapToBookOutPut(b *models.Book) *BookOutput {
 	return &BookOutput{
 		ExternalID:    b.ExternalID,
 		Title:         b.Title,
@@ -227,7 +226,7 @@ func mapToBookOutPut(b *book.Book) *BookOutput {
 	}
 }
 
-func mapToBooksOutput(b []*book.Book) []*BookOutput {
+func mapToBooksOutput(b []*models.Book) []*BookOutput {
 	var bookSlice []*BookOutput
 	for i := 0; i < len(b); i++ {
 		bookSlice = append(bookSlice, mapToBookOutPut(b[i]))

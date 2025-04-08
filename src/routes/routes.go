@@ -2,7 +2,7 @@ package routes
 
 import (
 	// Controllers
-	ctl "gofiber-boilerplate/src/controllers"
+	ctl "gofiber-boilerplate/src/handlers"
 	// Middlewares
 	"gofiber-boilerplate/src/middlewares"
 
@@ -30,10 +30,10 @@ func SetupRoutes(app *fiber.App) {
 
 	// Auth Group
 	auth := v1.Group("/auth")
-	auth.Post("/register", ctl.Register)
-	auth.Post("/login", ctl.Login)
+	auth.Post("/register", ctl.RegisterUser)
+	auth.Post("/login", ctl.LoginUser)
 	// Requires authentication
-	auth.Post("/logout", ctl.Logout)
+	auth.Post("/logout", ctl.LogoutUser)
 	auth.Post("/refresh", ctl.RefreshAuth)
 
 	// Books

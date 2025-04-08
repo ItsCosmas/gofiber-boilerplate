@@ -1,4 +1,4 @@
-package book
+package models
 
 import (
 	"time"

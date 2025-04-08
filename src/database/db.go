@@ -58,21 +58,28 @@ func ConnectPostgres() {
 
 // ConnectMongo Returns the Mongo DB Instance
 func ConnectMongo() {
-	client, err := mongo.NewClient(options.Client().ApplyURI(cfg.GetConfig().Mongo.URI))
+	clientOptions := options.Client().ApplyURI(cfg.GetConfig().Mongo.URI)
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	err = client.Connect(ctx)
-	db := client.Database(cfg.GetConfig().Mongo.MongoDBName)
-
+	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		log.Println(strings.Repeat("!", 40))
 		log.Println("☹️  Could Not Establish Mongo DB Connection")
 		log.Println(strings.Repeat("!", 40))
-
 		log.Fatal(err)
 	}
+
+	err = client.Ping(ctx, nil) // Verify the connection
+	if err != nil {
+		log.Println(strings.Repeat("!", 40))
+		log.Println("⚠️  Failed to Ping MongoDB after connection")
+		log.Println(strings.Repeat("!", 40))
+		log.Fatal(err)
+	}
+
+	db := client.Database(cfg.GetConfig().Mongo.MongoDBName)
 
 	log.Println(strings.Repeat("-", 40))
 	log.Println("😀 Connected To Mongo DB")
