@@ -62,7 +62,8 @@ go install github.com/swaggo/swag/cmd/swag@latest
 
 ```sh
 # Terminal 1
-swag init -g src/api/app.go --output ./src/api/docs # Generates Swagger
+cd src/
+swag init -g ./api/app.go --output ./api/docs # Generates Swagger
 
 # Terminal 2
 docker-compose --env-file ./src/.env up        # docker-compose up (Run App With AutoReload)
