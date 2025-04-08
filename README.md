@@ -3,11 +3,10 @@
 
 # Go (Golang) and Fiber RESTful API Boilerplate
 
-## 🚧 WORK IN PROGRESS
-
-- Could be used to provide quick bootstrap functionality for your next go and gofiber app.
-- I will update(try) this regularly to add functionality and new features.
-- Well this is just one way of doing it, not the official or the best 😅.
+- This can help you quickly start your new Go and Fiber web application.
+- Fiber and Go have been updated a lot since this was made.
+- This repository still has useful configurations and code to get you started, but it's not a complete template that you can use without making changes.
+- For more up-to-date info please refer to [Gofiber Recipes](https://github.com/gofiber/recipes)
 
 **Used libraries:**
 
@@ -34,7 +33,7 @@
 - [x] Improved Input Validations(could be better)
 - [x] Custom Error messages
 - [ ] Email notification (Welcome email, Reset password email)
-- [ ] Redis
+- [x] Redis
 - [ ] Casbin
 - [ ] WebSocket
 - [ ] gRPC
