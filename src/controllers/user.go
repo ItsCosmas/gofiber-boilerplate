@@ -3,12 +3,12 @@ package controllers
 import (
 	"net/http"
 
-	passwordUtil "gofiber-boilerplate/api/common/passwordutil"
-	validator "gofiber-boilerplate/api/common/validator"
-	"gofiber-boilerplate/api/models/user"
-	ssn "gofiber-boilerplate/api/repositories/session"
-	userRepo "gofiber-boilerplate/api/repositories/user"
-	"gofiber-boilerplate/api/services/auth"
+	passwordUtil "gofiber-boilerplate/src/common/passwordutil"
+	validator "gofiber-boilerplate/src/common/validator"
+	"gofiber-boilerplate/src/models/user"
+	ssn "gofiber-boilerplate/src/repositories/session"
+	userRepo "gofiber-boilerplate/src/repositories/user"
+	"gofiber-boilerplate/src/services/auth"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"

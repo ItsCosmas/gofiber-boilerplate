@@ -3,8 +3,8 @@ package session
 import (
 	"context"
 	"errors"
-	db "gofiber-boilerplate/api/database"
-	"gofiber-boilerplate/api/services/auth"
+	db "gofiber-boilerplate/src/database"
+	"gofiber-boilerplate/src/services/auth"
 	"time"
 )
 
@@ -42,7 +42,7 @@ func SaveToken(userID string, rt *auth.TokenDetails) error {
 	return nil
 }
 
-//FetchAuth Checks the metadata saved
+// FetchAuth Checks the metadata saved
 func FetchAuth(tokenUUID string) (string, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
@@ -54,7 +54,7 @@ func FetchAuth(tokenUUID string) (string, error) {
 	return userID, nil
 }
 
-//DeleteTokens deletes token from specified metadata
+// DeleteTokens deletes token from specified metadata
 func DeleteTokens(atkm *TokenMeta, rtkm *TokenMeta) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

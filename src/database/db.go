@@ -8,7 +8,7 @@ import (
 	"time"
 
 	// Configs
-	cfg "gofiber-boilerplate/api/configs"
+	cfg "gofiber-boilerplate/src/configs"
 
 	// Gorm
 	"gorm.io/driver/postgres"

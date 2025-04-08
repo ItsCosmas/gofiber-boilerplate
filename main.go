@@ -1,7 +1,7 @@
 package main
 
 import (
-	app "gofiber-boilerplate/api"
+	app "gofiber-boilerplate/src"
 	"log"
 	"time"
 

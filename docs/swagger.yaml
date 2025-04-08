@@ -1,0 +1,309 @@
+definitions:
+  controllers.BookObject:
+    properties:
+      authors:
+        items:
+          type: string
+        type: array
+      category:
+        type: string
+      deleted:
+        type: boolean
+      description:
+        type: string
+      isbn:
+        type: string
+      published_date:
+        type: string
+      publisher:
+        type: string
+      thumbnail:
+        type: string
+      title:
+        type: string
+    required:
+    - authors
+    - category
+    - description
+    - isbn
+    - published_date
+    - publisher
+    - thumbnail
+    - title
+    type: object
+  controllers.ErrorResponse:
+    properties:
+      errors:
+        items:
+          $ref: '#/definitions/controllers.Response'
+        type: array
+    type: object
+  controllers.Response:
+    properties:
+      body: {}
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  controllers.UserLogin:
+    properties:
+      email:
+        maxLength: 100
+        minLength: 5
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  controllers.UserObject:
+    properties:
+      bio:
+        type: string
+      email:
+        maxLength: 100
+        minLength: 5
+        type: string
+      fullName:
+        maxLength: 30
+        minLength: 2
+        type: string
+      password:
+        minLength: 6
+        type: string
+      profilePicture:
+        type: string
+      role:
+        type: string
+    required:
+    - email
+    - fullName
+    - password
+    type: object
+info:
+  contact: {}
+paths:
+  /auth/login:
+    post:
+      description: Logs in a user
+      parameters:
+      - description: Login Body
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UserLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+      summary: Login
+      tags:
+      - Auth
+  /auth/logout:
+    post:
+      description: Logs in a user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+      summary: Login
+      tags:
+      - Auth
+  /auth/refresh:
+    post:
+      description: Returns a fresh access token
+      parameters:
+      - description: Login Body
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UserLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+      summary: Refresh Auth
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      description: Registers a user
+      parameters:
+      - description: Register Body
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.UserObject'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controllers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+      summary: Register
+      tags:
+      - Auth
+  /books:
+    get:
+      description: Returns all books
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+      summary: Get All Books
+      tags:
+      - Books
+    post:
+      consumes:
+      - application/json
+      description: Creates a new book
+      parameters:
+      - description: With the Bearer started
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Book Body
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.BookObject'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/controllers.Response'
+        "400":
+          description: Bad Request
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+      summary: Create Book
+      tags:
+      - Books
+  /books/{bookID}:
+    get:
+      description: Returns a single book with specified id
+      parameters:
+      - description: bookID
+        in: path
+        name: bookID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.Response'
+        "404":
+          description: Not Found
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            items:
+              $ref: '#/definitions/controllers.ErrorResponse'
+            type: array
+      summary: Get Book By a Given ID
+      tags:
+      - Books
+  /home:
+    get:
+      description: Return a welcome message
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.Response'
+      summary: Return a welcome message
+      tags:
+      - Home
+swagger: "2.0"

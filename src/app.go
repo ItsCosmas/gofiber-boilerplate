@@ -1,22 +1,19 @@
-package app
+package src
 
 import (
 	"fmt"
 
 	// Configs
-	cfg "gofiber-boilerplate/api/configs"
-
-	// Swagger
-	docs "gofiber-boilerplate/api/docs" // Swagger Docs
+	cfg "gofiber-boilerplate/src/configs"
 
 	// routes
-	"gofiber-boilerplate/api/routes"
+	"gofiber-boilerplate/src/routes"
 
 	// database
-	db "gofiber-boilerplate/api/database"
+	db "gofiber-boilerplate/src/database"
 
 	// models
-	"gofiber-boilerplate/api/models/user"
+	"gofiber-boilerplate/src/models/user"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -84,13 +81,6 @@ func Run() {
 		============ Set Up Routes ============
 	*/
 	routes.SetupRoutes(app)
-
-	/*
-		============ Setup Swagger ===============
-	*/
-
-	// FIXME, In Production, Port Should not be added to the Swagger Host
-	docs.SwaggerInfo.Host = config.Host + ":" + config.Port
 
 	// Run the app and listen on given port
 	port := fmt.Sprintf(":%s", config.Port)

@@ -5,7 +5,7 @@ build (){
     --exclude postgres_data \
     --exclude .git \
     --exclude src/tmp \
-    --exclude 'src/.env.example' \
+    --exclude '.env.example' \
     --exclude 'README.md' \
     --exclude 'Dockerfile' \
     --exclude '.air.toml' \

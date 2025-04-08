@@ -2,12 +2,13 @@ package routes
 
 import (
 	// Controllers
-	ctl "gofiber-boilerplate/api/controllers"
+	ctl "gofiber-boilerplate/src/controllers"
 	// Middlewares
-	"gofiber-boilerplate/api/middlewares"
+	"gofiber-boilerplate/src/middlewares"
 
 	"github.com/gofiber/fiber/v2"
-	swagger "github.com/gofiber/swagger"
+	"github.com/gofiber/swagger"
+	_ "gofiber-boilerplate/docs"
 )
 
 // SetupRoutes setups router
@@ -17,7 +18,7 @@ func SetupRoutes(app *fiber.App) {
 
 	v1 := api.Group("/v1")
 
-	v1.Use("/docs", swagger.HandlerDefault)
+	v1.Get("/swagger/*", swagger.HandlerDefault) // default
 
 	v1.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{

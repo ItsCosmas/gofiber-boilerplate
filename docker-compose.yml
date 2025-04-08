@@ -1,27 +1,26 @@
-version: '3.5'
 services:
-  app:
-    container_name: gofiber_app
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: sh -c "cd src && go mod download && air"
-    environment:
-      - PORT=8000
-    ports:
-      - '8000:8000'
-    working_dir: /opt/gofiber-app
-    volumes:
-      - .:/opt/gofiber-app/:cached
-    depends_on:
-      - postgres
-      - mongo
-      - redis
-    networks:
-      - 'gofiber-net'
+  # app:
+  #   container_name: gofiber_app
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   command: sh -c "cd src && go mod download && air"
+  #   environment:
+  #     - PORT=8000
+  #   ports:
+  #     - '8000:8000'
+  #   working_dir: /opt/gofiber-app
+  #   volumes:
+  #     - .:/opt/gofiber-app/:cached
+  #   depends_on:
+  #     - postgres
+  #     - mongo
+  #     - redis
+  #   networks:
+  #     - 'gofiber-net'
 
   postgres:
-    image: postgres:12
+    image: postgres:17
     container_name: gofiber_postgres
     environment:
       - POSTGRES_USER=${DB_USER}
@@ -29,7 +28,7 @@ services:
       - POSTGRES_DB=${DB_NAME}
       - DATABASE_HOST=${DB_HOST}
     ports:
-      - '5432:5432'
+      - '5433:5432'
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
     logging:
@@ -55,10 +54,10 @@ services:
 
   # MongoDB
   mongo:
-    image: 'mongo:4.2-bionic'
+    image: 'mongo'
     container_name: gofiber_mongo
     ports:
-      - '27017:27017'
+      - '27018:27017'
     volumes:
       - ./mongodata:/data/db
     restart: always
@@ -75,6 +74,13 @@ services:
     ports:
       - '8081:8081'
     restart: always
+    environment:
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=false
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=   # empty
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=
+      - ME_CONFIG_BASICAUTH_USERNAME=
+      - ME_CONFIG_BASICAUTH_PASSWORD=
     logging:
       driver: none
     networks:
@@ -83,10 +89,10 @@ services:
 
   # Redis
   redis:
-    image: 'redis:6.2-buster'
+    image: 'redis:7-alpine'
     container_name: gofiber_redis
     ports:
-      - '6379:6379'
+      - '6380:6379'
     restart: always
     logging:
       driver: none
@@ -98,6 +104,7 @@ services:
     container_name: gofiber_redis-commander
     # hostname: redis-commander
     image: rediscommander/redis-commander:latest
+    platform: linux/amd64
     depends_on:
       - redis
     restart: always
@@ -106,7 +113,7 @@ services:
     ports:
     - "8082:8081"
     logging:
-      driver: none
+      driver: json-file
     networks:
       - 'gofiber-net'
     

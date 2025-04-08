@@ -47,7 +47,7 @@
 1. Create `.env` at src, i.e.
 
 ```sh
-cp src/.env.example src/.env
+cp .env.example .env
 ```
 
 2. Download and install Swag for generating docs
@@ -62,12 +62,11 @@ go install github.com/swaggo/swag/cmd/swag@latest
 
 ```sh
 # Terminal 1
-cd src/
-swag init -g ./api/app.go --output ./api/docs # Generates Swagger
+swag init # Generates Swagger
 
 # Terminal 2
-docker-compose --env-file ./src/.env up        # docker-compose up (Run App With AutoReload)
-docker-compose --env-file ./src/.env down      # docker-compose down (Shutdown App)
+docker-compose --env-file .env up        # docker-compose up (Run App With AutoReload)
+docker-compose --env-file .env down      # docker-compose down (Shutdown App)
 ```
 
 - API `http://localhost:8000/api/v1`
@@ -80,7 +79,7 @@ docker-compose --env-file ./src/.env down      # docker-compose down (Shutdown A
 1. Create `.env` at src, i.e.
 
 ```sh
-cp src/.env.example src/.env
+cp .env.example .env
 ```
 
 2. Update your `.env` variables for production
@@ -92,13 +91,13 @@ cp src/.env.example src/.env
 3. Download Swag for generating docs
 
 ```sh
-go get -u github.com/swaggo/swag/cmd/swag
+go install github.com/swaggo/swag/cmd/swag@latest
 ```
 
 - Generate Swagger Docs. You have to generate swagger docs before packaging the app.
 
 ```sh
-swag init -g src/api/app.go --output ./src/api/docs # Generates Swagger
+swag init # Generates Swagger
 ```
 
 4. Build Your Image

@@ -8,9 +8,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 
 	// database
-	db "gofiber-boilerplate/api/database"
+	db "gofiber-boilerplate/src/database"
 	// book model
-	"gofiber-boilerplate/api/models/book"
+	"gofiber-boilerplate/src/models/book"
 )
 
 // Create Book
