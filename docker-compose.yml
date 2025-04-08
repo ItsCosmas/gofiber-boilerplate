@@ -1,23 +1,23 @@
 services:
-  # app:
-  #   container_name: gofiber_app
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   command: sh -c "cd src && go mod download && air"
-  #   environment:
-  #     - PORT=8000
-  #   ports:
-  #     - '8000:8000'
-  #   working_dir: /opt/gofiber-app
-  #   volumes:
-  #     - .:/opt/gofiber-app/:cached
-  #   depends_on:
-  #     - postgres
-  #     - mongo
-  #     - redis
-  #   networks:
-  #     - 'gofiber-net'
+  app:
+    container_name: gofiber_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "cd src && go mod download && air"
+    environment:
+      - PORT=8000
+    ports:
+      - '8000:8000'
+    working_dir: /opt/gofiber-app
+    volumes:
+      - .:/opt/gofiber-app/:cached
+    depends_on:
+      - postgres
+      - mongo
+      - redis
+    networks:
+      - 'gofiber-net'
 
   postgres:
     image: postgres:17
