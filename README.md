@@ -89,6 +89,9 @@ cp .env.example .env
 
 3. Download Swag for generating docs
 
+- Btw, you can use tags to exclude building swagger docs on prod
+- Currently, they're not served because of a check in routes, but are needed to be build
+
 ```sh
 go install github.com/swaggo/swag/cmd/swag@latest
 ```

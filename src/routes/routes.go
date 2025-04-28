@@ -1,8 +1,10 @@
 package routes
 
 import (
+	cfg "gofiber-boilerplate/src/configs"
 	// Controllers
 	ctl "gofiber-boilerplate/src/handlers"
+
 	// Middlewares
 	"gofiber-boilerplate/src/middlewares"
 
@@ -14,11 +16,16 @@ import (
 // SetupRoutes setups router
 func SetupRoutes(app *fiber.App) {
 
+	cfg.LoadConfig()
+	config := cfg.GetConfig()
+
 	api := app.Group("/api")
 
 	v1 := api.Group("/v1")
 
-	v1.Get("/swagger/*", swagger.HandlerDefault) // default
+	if !config.IsProd() {
+		v1.Get("/swagger/*", swagger.HandlerDefault) // default Only add Swagger in non-production environments
+	}
 
 	v1.Get("/", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
